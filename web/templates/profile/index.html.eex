@@ -1,0 +1,30 @@
+<h2>Listing profiles</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Avatar</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for profile <- @profiles do %>
+    <tr>
+      <td><%= profile.gender %></td>
+      <td><%= profile.age %></td>
+      <td><%= profile.avatar %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: profile_path(@conn, :show, profile), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: profile_path(@conn, :edit, profile), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: profile_path(@conn, :delete, profile), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New profile", to: profile_path(@conn, :new) %>

@@ -20,6 +20,8 @@ defmodule Nice.Router do
     resources "/categories", CategoryController
     resources "/products", ProductController
     resources "/good_groups", GoodGroupController
+    resources "/users", UserController
+    resources "/profiles", ProfileController
   end
 
   # Other scopes may use custom stacks.
@@ -28,5 +30,7 @@ defmodule Nice.Router do
     resources "/categories", API.CategoryController, except: [:new, :edit]
     resources "/products", API.ProductController, except: [:new, :edit]
     resources "/good_groups", API.GoodGroupController, except: [:new, :edit]
+    resources "/users", API.UserController, except: [:new, :edit]
+    resources "/profiles", API.ProfileController, except: [:new, :edit]
   end
 end
