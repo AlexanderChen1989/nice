@@ -4,6 +4,7 @@ defmodule Nice.User do
   schema "users" do
     field :name, :string
     field :password, :string
+    field :marked, :boolean, virtual: true, default: false
 
     timestamps()
   end

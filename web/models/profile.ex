@@ -5,6 +5,7 @@ defmodule Nice.Profile do
     field :gender, :string
     field :age, :integer
     field :avatar, :string
+    field :marked, :boolean, virtual: true, default: false
 
     timestamps()
   end

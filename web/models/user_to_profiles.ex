@@ -16,4 +16,10 @@ defmodule Nice.UserToProfiles do
     |> cast(params, [:user_id, :profile_id])
     |> validate_required([:user_id, :profile_id])
   end
+
+  def find(user_id, profile_id) do
+    from u in Nice.UserToProfiles,
+      where: u.user_id == ^user_id and u.profile_id == ^profile_id,
+      select: u
+  end
 end

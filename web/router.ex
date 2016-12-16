@@ -17,12 +17,14 @@ defmodule Nice.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/dogs", DogController
     resources "/categories", CategoryController
     resources "/products", ProductController
     resources "/good_groups", GoodGroupController
     resources "/users", UserController
     resources "/profiles", ProfileController
     resources "/user_to_profiles", UserToProfilesController
+    get "/both/user_to_profiles", UserToProfilesController, :both
   end
 
   # Other scopes may use custom stacks.
