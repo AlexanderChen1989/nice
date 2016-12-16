@@ -22,11 +22,14 @@ defmodule Nice.Router do
     resources "/good_groups", GoodGroupController
     resources "/users", UserController
     resources "/profiles", ProfileController
+    resources "/user_to_profiles", UserToProfilesController
   end
 
   # Other scopes may use custom stacks.
   scope "/api", Nice do
     pipe_through :api
+
+    resources "/user_to_profiles", API.UserToProfilesController, except: [:new, :edit]
     resources "/categories", API.CategoryController, except: [:new, :edit]
     resources "/products", API.ProductController, except: [:new, :edit]
     resources "/good_groups", API.GoodGroupController, except: [:new, :edit]

@@ -1,0 +1,6 @@
+<h2>New user to profiles</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: user_to_profiles_path(@conn, :create) %>
+
+<%= link "Back", to: user_to_profiles_path(@conn, :index) %>

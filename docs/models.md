@@ -115,9 +115,12 @@ type Store struct {
 mix phoenix.gen.html User users name:string password:string
 mix phoenix.gen.json API.User users name:string password:string --no-model
 
-mix phoenix.gen.html Profile profiles gender:string age:interger avatar:string
-mix phoenix.gen.json API.Profile profiles gender:string age:interger avatar:string --no-model
+mix phoenix.gen.html Profile profiles gender:string age:integer avatar:string
+mix phoenix.gen.json API.Profile profiles gender:string age:integer avatar:string --no-model
 
+
+mix phoenix.gen.html UserToProfiles user_to_profiles user_id:integer profile_id:integer
+mix phoenix.gen.json API.UserToProfiles user_to_profiles user_id:integer profile_id:integer --no-model
 
 type User struct {
 	ID           bson.ObjectId `bson:"_id"`
