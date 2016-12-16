@@ -19,6 +19,7 @@ defmodule Nice.Router do
     get "/", PageController, :index
     resources "/categories", CategoryController
     resources "/products", ProductController
+    resources "/good_groups", GoodGroupController
   end
 
   # Other scopes may use custom stacks.
@@ -26,5 +27,6 @@ defmodule Nice.Router do
     pipe_through :api
     resources "/categories", API.CategoryController, except: [:new, :edit]
     resources "/products", API.ProductController, except: [:new, :edit]
+    resources "/good_groups", API.GoodGroupController, except: [:new, :edit]
   end
 end

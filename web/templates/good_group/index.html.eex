@@ -1,0 +1,30 @@
+<h2>Listing good groups</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Name</th>
+      <th>Max selection</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for good_group <- @good_groups do %>
+    <tr>
+      <td><%= good_group.product_id %></td>
+      <td><%= good_group.name %></td>
+      <td><%= good_group.max_selection %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: good_group_path(@conn, :show, good_group), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: good_group_path(@conn, :edit, good_group), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: good_group_path(@conn, :delete, good_group), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New good group", to: good_group_path(@conn, :new) %>

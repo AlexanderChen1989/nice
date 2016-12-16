@@ -11,6 +11,27 @@ mix phoenix.gen.html Product products category_id:references:categories name:str
 mix phoenix.gen.json API.Product products category_id:references:categories name:string description:string cover:string samples:array:string summary:string polish_print_price:integer print_price:integer display_type:string --no-model
 
 
+mix phoenix.gen.html GoodGroup good_groups product_id:references:products name:string max_selection:integer
+mix phoenix.gen.json API.GoodGroup good_groups product_id:references:products name:string max_selection:integer --no-model
+
+
+type Good struct {
+	ID            bson.ObjectId `bson:"_id"`
+	Name          string
+	Description   string
+	Color         string
+	Specification string
+	Price         int
+	Discount      string
+}
+
+type GoodGroup struct {
+	ID           bson.ObjectId `bson:"_id"`
+  ProductID
+	Name         string
+	MaxSelection int
+	Goods        []Good
+}
 
 type Product struct {
 	ID               bson.ObjectId `bson:"_id"`
@@ -37,12 +58,6 @@ type Good struct {
 	Discount      string
 }
 
-type GoodGroup struct {
-	ID           bson.ObjectId `bson:"_id"`
-	Name         string
-	MaxSelection int
-	Goods        []Good
-}
 
 type Order struct {
 	ID           bson.ObjectId `bson:"_id"`
