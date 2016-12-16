@@ -18,7 +18,8 @@
     <tr>
       <td>
         <%= link "<",
-        to: user_to_profiles_path(@conn, :both, from: @from, to: profile.id),
+        id: "to_#{profile.id}",
+        to: user_to_profiles_path(@conn, :toggle, from: @from, to: profile.id),
         class: "btn #{if profile.marked, do: "btn-primary", else: "btn-default"} btn-xs" %>
       </td>
       <td><%= profile.id %></td>

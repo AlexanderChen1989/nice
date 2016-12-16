@@ -7,13 +7,19 @@ defmodule Nice.UserToProfilesController do
   alias Nice.User
   alias Nice.Profile
 
-  def both(conn, params) do
+  def toggle(conn, params) do
     {from, _} = Map.get(params, "from", "-1") |> Integer.parse
     {to, _} = Map.get(params, "to", "-1") |> Integer.parse
 
     if from != -1 and to != -1 do
-      toggle(from, to)
+      toggle_connection(from, to)
     end
+
+    redirect conn, to: user_to_profiles_path(conn, :both, from: from)
+  end
+
+  def both(conn, params) do
+    {from, _} = Map.get(params, "from", "-1") |> Integer.parse
 
     users =
       Repo.all(User)
@@ -27,11 +33,10 @@ defmodule Nice.UserToProfilesController do
       Repo.all(Profile)
       |> mark_item(& &1.id in profile_ids)
 
-
-    render(conn, "both.html", users: users, profiles: profiles, from: from, to: to)
+    render(conn, "both.html", users: users, profiles: profiles, from: from)
   end
 
-  defp toggle(from, to) do
+  defp toggle_connection(from, to) do
     case UserToProfiles.find(from, to) |> Repo.all() do
       [] ->
         %UserToProfiles{user_id: from, profile_id: to} |> Repo.insert

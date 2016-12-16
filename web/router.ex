@@ -25,6 +25,7 @@ defmodule Nice.Router do
     resources "/profiles", ProfileController
     resources "/user_to_profiles", UserToProfilesController
     get "/both/user_to_profiles", UserToProfilesController, :both
+    get "/both/user_to_profiles/toggle", UserToProfilesController, :toggle
   end
 
   # Other scopes may use custom stacks.

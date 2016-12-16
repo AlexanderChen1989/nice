@@ -6,3 +6,13 @@
     <%= render "profile_index.html", conn: @conn, profiles: @profiles, from: @from %>
   </div>
 </div>
+
+<script type="text/javascript">
+  <%= for profile <- @profiles do %>
+    <%= if profile.marked do %>
+      <%=
+        raw "connect('from_#{@from}', 'to_#{profile.id}', 'green', 1)"
+      %>
+    <% end %>
+  <% end %>
+</script>

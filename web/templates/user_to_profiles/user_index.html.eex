@@ -25,7 +25,9 @@
       </td>
       <td>
         <%= link ">",
-          to: user_to_profiles_path(@conn, :both, from: user.id), class: "btn #{if user.marked, do: "btn-primary", else: "btn-default"} btn-xs" %>
+          to: user_to_profiles_path(@conn, :both, from: user.id),
+          id: "from_#{user.id}",
+          class: "btn #{if user.marked, do: "btn-primary", else: "btn-default"} btn-xs" %>
       </td>
     </tr>
 <% end %>
