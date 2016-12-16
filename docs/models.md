@@ -112,6 +112,13 @@ type Store struct {
 	Services    []StoreService
 }
 
+mix phoenix.gen.html User users name:string password:string
+mix phoenix.gen.json API.User users name:string password:string --no-model
+
+mix phoenix.gen.html Profile profiles gender:string age:interger avatar:string
+mix phoenix.gen.json API.Profile profiles gender:string age:interger avatar:string --no-model
+
+
 type User struct {
 	ID           bson.ObjectId `bson:"_id"`
 	Username     string

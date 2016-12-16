@@ -1,6 +1,7 @@
 defmodule Nice.ProductController do
   use Nice.Web, :controller
 
+  require Logger
   alias Nice.Product
 
   def index(conn, _params) do
@@ -22,6 +23,7 @@ defmodule Nice.ProductController do
         |> put_flash(:info, "Product created successfully.")
         |> redirect(to: product_path(conn, :index))
       {:error, changeset} ->
+        changeset |> inspect |> Logger.info
         render(conn, "new.html", changeset: changeset)
     end
   end
