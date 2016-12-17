@@ -13,7 +13,7 @@ defmodule Mix.Tasks.Gen.Bash do
   end
 
   def gen(models, connects) do
-    IO.puts "#!/bin/bash\n\n"
+    IO.puts "#!/bin/bash"
 
     models
       |> Enum.each(fn {model, table, fields} ->
@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Gen.Bash do
         end)
 
     IO.puts "\n"
-    
+
     models
       |> Enum.each(fn {model, table, _} ->
           IO.puts "resource \"/#{table}\", API.#{model}Controller, except: [:new, :edit]"
@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Gen.Bash do
       models
       |> Enum.map(fn {m, _, _} -> m end)
 
-    IO.puts "\n\n#!/bin/bash\n\n"
+    IO.puts "\n\n#!/bin/bash"
 
     gets =
       connects
