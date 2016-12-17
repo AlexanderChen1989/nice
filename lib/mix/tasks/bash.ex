@@ -5,7 +5,6 @@ defmodule Mix.Tasks.Gen.Bash do
   def run(_) do
     IO.puts "\n\n"
     try do
-      IO.puts "#!/bin/bash\n\n"
       gen(Models.models, Models.connects)
     rescue
       e ->
@@ -16,6 +15,7 @@ defmodule Mix.Tasks.Gen.Bash do
   end
 
   def gen(models, connects) do
+    IO.puts "#!/bin/bash\n\n"
     models =
       models
       |> Enum.map(fn {model, table, fields} ->
@@ -24,6 +24,7 @@ defmodule Mix.Tasks.Gen.Bash do
           model
         end)
 
+    IO.puts "\n\n#!/bin/bash\n\n"
     connects
       |> Enum.map(fn {from, to} ->
           if (not from in models) || (not to in models) do
