@@ -46,12 +46,25 @@ defmodule Mix.Tasks.Gen.Connect do
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "Controller")
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "View")
 
-    from_to =
+    [from, to] =
+      Keyword.get(binding, :alias)
+      |> String.split("To")
+
+    [from_singular, to_singular] =
       Keyword.get(binding, :singular)
       |> String.split("_to_")
-      |> Enum.map(fn s -> {:from, s <> "s"} end)
 
-    binding = binding ++ from_to
+    [from_plural, to_plural] =
+      [from_singular, to_singular]
+      |> Enum.map(& &1 <> "s")
+
+    binding =
+      binding ++
+      [from: from, to: to] ++
+      [from_singular: from_singular, to_singular: to_singular] ++
+      [from_plural: from_plural, to_plural: to_plural]
+
+    IO.inspect binding
 
     Mix.Phoenix.copy_from paths(), "priv/templates/phoenix.gen.html", "", binding, [
       {:eex, "controller.ex",       "web/controllers/#{path}_controller.ex"},

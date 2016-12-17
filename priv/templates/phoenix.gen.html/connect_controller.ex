@@ -1,11 +1,11 @@
-defmodule Nice.UserToProfilesConnectController do
-  use Nice.Web, :controller
+defmodule <%= module %>ConnectController do
+  use <%= base %>.Web, :controller
 
   require Logger
 
-  alias Nice.UserToProfiles
-  alias Nice.User
-  alias Nice.Profile
+  alias <%= module %>
+  alias <%= "#{base}.#{from}" %>
+  alias <%= "#{base}.#{to}" %>
 
   def toggle(conn, params) do
     {from, _} = Map.get(params, "from", "-1") |> Integer.parse
@@ -15,31 +15,31 @@ defmodule Nice.UserToProfilesConnectController do
       toggle_connection(from, to)
     end
 
-    redirect conn, to: user_to_profiles_connect_path(conn, :connect, from: from)
+    redirect conn, to: <%= singular %>_connect_path(conn, :connect, from: from)
   end
 
   def connect(conn, params) do
     {from, _} = Map.get(params, "from", "-1") |> Integer.parse
 
-    users =
-      Repo.all(User)
+    <%= from_plural %> =
+      Repo.all(<%= from %>)
       |> mark_item(&(&1.id == from))
 
-    profile_ids =
-      Repo.all(UserToProfiles)
-      |> Enum.filter_map(& &1.user_id == from, & &1.profile_id)
+    <%= to_singular %>_ids =
+      Repo.all(<%= module %>)
+      |> Enum.filter_map(& &1.<%= from_singular %>_id == from, & &1.<%= to_singular %>_id)
 
-    profiles =
-      Repo.all(Profile)
-      |> mark_item(& &1.id in profile_ids)
+    <%= to_plural %> =
+      Repo.all(<%= to %>)
+      |> mark_item(& &1.id in <%= to_singular %>_ids)
 
-    render(conn, "connect.html", users: users, profiles: profiles, from: from)
+    render conn, "connect.html", <%= from_plural %>: <%= from_plural %>, <%= to_plural %>: <%= to_plural %>, from: from
   end
 
   defp toggle_connection(from, to) do
-    case UserToProfiles.find(from, to) |> Repo.all() do
+    case <%= module %>.find(from, to) |> Repo.all() do
       [] ->
-        %UserToProfiles{user_id: from, profile_id: to} |> Repo.insert
+        %<%= module %>{<%= from_singular %>_id: from, <%= to_singular %>_id: to} |> Repo.insert
       ups ->
         ups |> Enum.each(&Repo.delete/1)
     end
