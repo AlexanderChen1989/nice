@@ -5,6 +5,7 @@ defmodule Mix.Tasks.Gen.Bash do
   def run(_) do
     IO.puts "\n\n"
     try do
+      IO.puts "#!/bin/bash\n\n"
       gen(Models.models, Models.connects)
     rescue
       e ->
