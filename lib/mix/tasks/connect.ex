@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Gen.Connection do
+defmodule Mix.Tasks.Gen.Connect do
   use Mix.Task
 
   @shortdoc "Generates controller, model and views for an HTML based resource"
@@ -55,6 +55,10 @@ defmodule Mix.Tasks.Gen.Connection do
       {:eex, "show.html.eex",       "web/templates/#{path}/show.html.eex"},
       {:eex, "view.ex",             "web/views/#{path}_view.ex"},
       {:eex, "controller_test.exs", "test/controllers/#{path}_controller_test.exs"},
+
+      {:eex, "connect_controller.ex",       "web/controllers/#{path}_connect_controller.ex"},
+      {:eex, "connect.html.eex",      "web/templates/#{path}_connect/connect.html.eex"},
+      {:eex, "connect_view.ex",             "web/views/#{path}_connect_view.ex"},
     ]
 
     instructions = """
