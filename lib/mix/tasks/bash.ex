@@ -25,6 +25,21 @@ defmodule Mix.Tasks.Gen.Bash do
           IO.puts "mix phoenix.gen.json API.#{model} #{table} #{fields |> Enum.join(" ")} --no-model"
         end)
 
+    IO.puts "\n\n"
+
+    models
+      |> Enum.each(fn {model, table, _} ->
+          IO.puts "resource \"/#{table}\", #{model}Controller"
+        end)
+
+    IO.puts "\n"
+    
+    models
+      |> Enum.each(fn {model, table, _} ->
+          IO.puts "resource \"/#{table}\", API.#{model}Controller, except: [:new, :edit]"
+        end)
+
+
     models =
       models
       |> Enum.map(fn {m, _, _} -> m end)
