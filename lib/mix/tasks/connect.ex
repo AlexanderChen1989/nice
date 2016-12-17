@@ -64,8 +64,6 @@ defmodule Mix.Tasks.Gen.Connect do
       [from_singular: from_singular, to_singular: to_singular] ++
       [from_plural: from_plural, to_plural: to_plural]
 
-    IO.inspect binding
-
     Mix.Phoenix.copy_from paths(), "priv/templates/phoenix.gen.html", "", binding, [
       {:eex, "controller.ex",       "web/controllers/#{path}_controller.ex"},
       {:eex, "edit.html.eex",       "web/templates/#{path}/edit.html.eex"},

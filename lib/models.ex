@@ -7,7 +7,8 @@ defmodule Models do
           string("name"),
           integer("age"),
       ]},
-      { "Rate", "rates", [
+      { "Rat", "rats", [
+          string("name"),
           string("agender"),
           decimal("height"),
       ]}
@@ -16,7 +17,7 @@ defmodule Models do
 
   def connects do
     [
-      {"Cat", "Rate"}
+      {"Cat", "Rat"}
     ]
   end
 end

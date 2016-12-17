@@ -1,0 +1,28 @@
+<h2>Listing cat to rats</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Cat</th>
+      <th>Rat</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for cat_to_rat <- @cat_to_rats do %>
+    <tr>
+      <td><%= cat_to_rat.cat_id %></td>
+      <td><%= cat_to_rat.rat_id %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: cat_to_rat_path(@conn, :show, cat_to_rat), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: cat_to_rat_path(@conn, :edit, cat_to_rat), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: cat_to_rat_path(@conn, :delete, cat_to_rat), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New cat to rat", to: cat_to_rat_path(@conn, :new) %>

@@ -36,8 +36,14 @@ defmodule <%= module %>ConnectController do
     render conn, "connect.html", <%= from_plural %>: <%= from_plural %>, <%= to_plural %>: <%= to_plural %>, from: from
   end
 
+
+
   defp toggle_connection(from, to) do
-    case <%= module %>.find(from, to) |> Repo.all() do
+    query = from u in <%= module %>,
+      where: u.<%= from_singular %>_id == ^from and u.<%= to_singular %>_id == ^to,
+      select: u
+
+    case query |> Repo.all() do
       [] ->
         %<%= module %>{<%= from_singular %>_id: from, <%= to_singular %>_id: to} |> Repo.insert
       ups ->

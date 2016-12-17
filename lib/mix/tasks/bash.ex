@@ -7,7 +7,9 @@ defmodule Mix.Tasks.Gen.Bash do
     try do
       gen(Models.models, Models.connects)
     rescue
-      _ -> help |> IO.puts
+      re ->
+        raise re
+        help |> IO.puts
     end
     IO.puts "\n\n"
   end
@@ -18,6 +20,7 @@ defmodule Mix.Tasks.Gen.Bash do
     models
       |> Enum.each(fn {model, table, fields} ->
           IO.puts "mix phoenix.gen.html #{model} #{table} #{fields |> Enum.join(" ")}"
+          IO.puts "sleep 2"
         end)
 
     models
@@ -29,14 +32,14 @@ defmodule Mix.Tasks.Gen.Bash do
 
     models
       |> Enum.each(fn {model, table, _} ->
-          IO.puts "resource \"/#{table}\", #{model}Controller"
+          IO.puts "resources \"/#{table}\", #{model}Controller"
         end)
 
     IO.puts "\n"
 
     models
       |> Enum.each(fn {model, table, _} ->
-          IO.puts "resource \"/#{table}\", API.#{model}Controller, except: [:new, :edit]"
+          IO.puts "resources \"/#{table}\", API.#{model}Controller, except: [:new, :edit]"
         end)
 
 
@@ -60,22 +63,38 @@ defmodule Mix.Tasks.Gen.Bash do
           table = "#{from_lower}_to_#{to_lower}s"
           fields = "#{from_lower}_id:integer #{to_lower}_id:integer"
 
-          IO.puts "mix gen.connect #{model} #{table} #{fields}"
-
+          # IO.puts "mix gen.connect #{model} #{table} #{fields}"
+          # IO.puts "mix phoenix.gen.json API.#{model} #{table} #{fields} --no-model"
+          # IO.puts "sleep 2"
+          #
           [
-            "get \"/connect/#{table}\" #{model}ConnectController, :connect",
-            "get \"/connect/#{table}/toggle\" #{model}ConnectController, :toggle"
+            "mix gen.connect #{model} #{table} #{fields}\nsleep 2",
+            "mix phoenix.gen.json API.#{model} #{table} #{fields} --no-model",
+            "resources \"/#{table}\", #{model}Controller",
+            "resources \"/#{table}\", API.#{model}Controller, except: [:new, :edit]",
+            "get \"/connect/#{table}\", #{model}ConnectController, :connect",
+            "get \"/connect/#{table}/toggle\", #{model}ConnectController, :toggle"
           ]
         end)
 
     IO.puts "\n\n"
 
-    gets
-    |> Enum.each(fn [c, t] ->
-        IO.puts c
-        IO.puts t
-      end)
+    {as, bs, cs, ds, es, fs} =
+      gets
+      |> Enum.reduce({[],[],[],[], [], []}, fn [a, b, c, d, e, f], acc ->
+          {as, bs, cs, ds, es, fs} = acc
+          {[a |as], [b | bs], [c | cs], [d | ds], [e | es], [f | fs]}
+        end)
 
+    as |> Enum.map(&IO.puts/1)
+    bs |> Enum.map(&IO.puts/1)
+
+    IO.puts ""
+
+    cs |> Enum.map(&IO.puts/1)
+    ds |> Enum.map(&IO.puts/1)
+    es |> Enum.map(&IO.puts/1)
+    fs |> Enum.map(&IO.puts/1)
   end
 
   def help do
