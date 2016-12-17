@@ -26,6 +26,9 @@ defmodule Nice.Router do
     resources "/user_to_profiles", UserToProfilesController
     get "/connect/user_to_profiles", UserToProfilesConnectController, :connect
     get "/connect/user_to_profiles/toggle", UserToProfilesConnectController, :toggle
+
+    resources "/cats", CatController
+    resources "/rates", RateController
   end
 
   # Other scopes may use custom stacks.
@@ -38,5 +41,8 @@ defmodule Nice.Router do
     resources "/good_groups", API.GoodGroupController, except: [:new, :edit]
     resources "/users", API.UserController, except: [:new, :edit]
     resources "/profiles", API.ProfileController, except: [:new, :edit]
+
+    resources "/cats", API.CatController, except: [:new, :edit]
+    resources "/rates", API.RateController, except: [:new, :edit]
   end
 end

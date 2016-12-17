@@ -7,25 +7,32 @@ defmodule Mix.Tasks.Gen.Bash do
     try do
       gen(Models.models, Models.connects)
     rescue
-      e ->
-        IO.inspect e
-        help |> IO.puts
+      _ -> help |> IO.puts
     end
     IO.puts "\n\n"
   end
 
   def gen(models, connects) do
     IO.puts "#!/bin/bash\n\n"
-    models =
-      models
-      |> Enum.map(fn {model, table, fields} ->
+
+    models
+      |> Enum.each(fn {model, table, fields} ->
           IO.puts "mix phoenix.gen.html #{model} #{table} #{fields |> Enum.join(" ")}"
-          IO.puts "mix phoenix.gen.json API.#{model} #{table} #{fields |> Enum.join(" ")} --no-model"
-          model
         end)
 
+    models
+      |> Enum.each(fn {model, table, fields} ->
+          IO.puts "mix phoenix.gen.json API.#{model} #{table} #{fields |> Enum.join(" ")} --no-model"
+        end)
+
+    models =
+      models
+      |> Enum.map(fn {m, _, _} -> m end)
+
     IO.puts "\n\n#!/bin/bash\n\n"
-    connects
+
+    gets =
+      connects
       |> Enum.map(fn {from, to} ->
           if (not from in models) || (not to in models) do
             raise "{#{from}, #{to}} should in #{models |> inspect}"
@@ -39,7 +46,21 @@ defmodule Mix.Tasks.Gen.Bash do
           fields = "#{from_lower}_id:integer #{to_lower}_id:integer"
 
           IO.puts "mix gen.connect #{model} #{table} #{fields}"
+
+          [
+            "get \"/connect/#{table}\" #{model}ConnectController, :connect",
+            "get \"/connect/#{table}/toggle\" #{model}ConnectController, :toggle"
+          ]
         end)
+
+    IO.puts "\n\n"
+
+    gets
+    |> Enum.each(fn [c, t] ->
+        IO.puts c
+        IO.puts t
+      end)
+
   end
 
   def help do
