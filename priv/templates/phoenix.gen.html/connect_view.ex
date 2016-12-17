@@ -1,3 +1,3 @@
-defmodule Nice.UserToProfilesConnectView do
-  use Nice.Web, :view
+defmodule <%= module %>ConnectView do
+  use <%= base %>.Web, :view
 end
