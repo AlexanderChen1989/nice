@@ -3,11 +3,11 @@ defmodule Models do
 
   def models do
     [
-      { "User", "users", [
+      { "Cat", "cats", [
           string("name"),
           integer("age"),
       ]},
-      { "Profile", "profiles", [
+      { "Rate", "rates", [
           string("agender"),
           decimal("height"),
       ]}
@@ -16,7 +16,7 @@ defmodule Models do
 
   def connects do
     [
-      {"User", "Profile"}
+      {"Cat", "Rate"}
     ]
   end
 end
