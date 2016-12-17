@@ -57,7 +57,7 @@ defmodule Mix.Tasks.Gen.Connect do
       {:eex, "controller_test.exs", "test/controllers/#{path}_controller_test.exs"},
 
       {:eex, "connect_controller.ex",       "web/controllers/#{path}_connect_controller.ex"},
-      # {:eex, "connect.html.eex",      "web/templates/#{path}_connect/connect.html.eex"},
+      {:eex, "connect.html.eex",      "web/templates/#{path}_connect/connect.html.eex"},
       {:eex, "connect_view.ex",             "web/views/#{path}_connect_view.ex"},
     ]
 
