@@ -84,7 +84,6 @@ defmodule Mix.Tasks.Phoenix.Gen.Model do
   """
   def run(args) do
     switches = [migration: :boolean, binary_id: :boolean, instructions: :string]
-
     {opts, parsed, _} = OptionParser.parse(args, switches: switches)
     [singular, plural | attrs] = validate_args!(parsed)
 
@@ -111,7 +110,7 @@ defmodule Mix.Tasks.Phoenix.Gen.Model do
       {:eex, "model_test.exs", "test/models/#{path}_test.exs"},
     ] ++ migration(opts[:migration], path)
 
-    Mix.Phoenix.copy_from paths(), "priv/templates/phoenix.gen.model", "", binding, files
+    Mix.Phoenix.copy_from paths(), "priv/templates/gen.model", "", binding, files
 
     # Print any extra instruction given by parent generators
     Mix.shell.info opts[:instructions] || ""
