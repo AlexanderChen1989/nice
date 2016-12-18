@@ -1,6 +1,0 @@
-<h2>New good group</h2>
-
-<%= render "form.html", changeset: @changeset,
-                        action: good_group_path(@conn, :create) %>
-
-<%= link "Back", to: good_group_path(@conn, :index) %>

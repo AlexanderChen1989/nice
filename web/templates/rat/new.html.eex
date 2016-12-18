@@ -1,6 +1,0 @@
-<h2>New rat</h2>
-
-<%= render "form.html", changeset: @changeset,
-                        action: rat_path(@conn, :create) %>
-
-<%= link "Back", to: rat_path(@conn, :index) %>

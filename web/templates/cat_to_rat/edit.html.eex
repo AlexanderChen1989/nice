@@ -1,6 +1,0 @@
-<h2>Edit cat to rat</h2>
-
-<%= render "form.html", changeset: @changeset,
-                        action: cat_to_rat_path(@conn, :update, @cat_to_rat) %>
-
-<%= link "Back", to: cat_to_rat_path(@conn, :index) %>
