@@ -21,7 +21,6 @@ defmodule Nice.Router do
     # HTML Routes
     resources "/users", UserController
     resources "/profiles", ProfileController
-    resources "/user_to_profiles", UserToProfileController
 
     # Connect Routes
     get "/connect/user_to_profiles", UserToProfileConnectController, :connect
@@ -36,7 +35,6 @@ defmodule Nice.Router do
     # API Routes
     resources "/users", API.UserController, except: [:new, :edit]
     resources "/profiles", API.ProfileController, except: [:new, :edit]
-    resources "/user_to_profiles", API.UserToProfileController, except: [:new, :edit]
 
 
   end
