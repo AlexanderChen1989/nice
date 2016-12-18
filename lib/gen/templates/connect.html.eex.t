@@ -1,0 +1,133 @@
+<script>
+function getOffset( el ) {
+    var rect = el.getBoundingClientRect();
+    return {
+        left: rect.left + window.pageXOffset,
+        top: rect.top + window.pageYOffset,
+        width: rect.width || el.offsetWidth,
+        height: rect.height || el.offsetHeight
+    };
+}
+
+function connect(id1, id2, color, thickness) {
+    // draw a line connecting elements
+    var div1 = document.getElementById(id1);
+    var div2 = document.getElementById(id2);
+    if (!div1 || !div2) {
+      return
+    }
+    var off1 = getOffset(div1);
+    var off2 = getOffset(div2);
+    // bottom right
+    var x1 = off1.left + off1.width;
+    var y1 = off1.top + off1.height;
+    // top right
+    var x2 = off2.left + off2.width;
+    var y2 = off2.top;
+    // distance
+    var length = Math.sqrt(((x2-x1) * (x2-x1)) + ((y2-y1) * (y2-y1)));
+    // center
+    var cx = ((x1 + x2) / 2) - (length / 2);
+    var cy = ((y1 + y2) / 2) - (thickness / 2);
+    // angle
+    var angle = Math.atan2((y1-y2),(x1-x2))*(180/Math.PI);
+    // make hr
+    var htmlLine = "<div style='padding:0px; margin:0px; height:" + thickness + "px; background-color:" + color + "; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />";
+    //
+    // alert(htmlLine);
+    document.body.innerHTML += htmlLine;
+}
+</script>
+
+<div class="row">
+  <div class="col-md-5">
+
+    <h2>Listing  <%= from_plural %></h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+    <%= "<%=" %> for <%= from_singular %> <- @<%= from_plural %> do <%= "%\>" %>
+        <tr>
+          <td><%= "<%=" %> <%= from_singular %>.id <%= "%\>" %></td>
+          <td><%= "<%=" %> <%= from_singular %>.name <%= "%\>" %></td>
+
+          <td class="text-right">
+            <%= "<%=" %> link "Show", to: <%= from_singular %>_path(@conn, :show, <%= from_singular %>), class: "btn btn-default btn-xs" <%= "%\>" %>
+            <%= "<%=" %> link "Edit", to: <%= from_singular %>_path(@conn, :edit, <%= from_singular %>), class: "btn btn-default btn-xs" <%= "%\>" %>
+            <%= "<%=" %> link "Delete", to: <%= from_singular %>_path(@conn, :delete, <%= from_singular %>), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" <%= "%\>" %>
+          </td>
+          <td>
+            <%= "<%=" %> link ">",
+              to: <%= singular %>_connect_path(@conn, :connect, from: <%= from_singular %>.id),
+              id: "from_#{<%= from_singular %>.id}",
+              class: "btn #{if <%= from_singular %>.marked, do: "btn-primary", else: "btn-default"} btn-xs" <%= "%\>" %>
+          </td>
+        </tr>
+    <%= "<%" %> end <%= "%\>" %>
+      </tbody>
+    </table>
+
+    <%= "<%=" %> link "New <%= from_singular %>", to: <%= from_singular %>_path(@conn, :new) <%= "%\>" %>
+
+  </div>
+  <div class="col-md-2"></div>
+  <div class="col-md-5">
+
+    <h2>Listing <%= to_plural %></h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+
+          <th>ID</th>
+          <th>Name</th>
+
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+    <%= "<%=" %> for <%= to_singular %> <- @<%= to_plural %> do <%= "%\>" %>
+        <tr>
+          <td>
+            <%= "<%=" %> link "<",
+            id: "to_#{<%= to_singular %>.id}",
+            to: <%= singular %>_connect_path(@conn, :toggle, from: @from, to: <%= to_singular %>.id),
+            class: "btn #{if <%= to_singular %>.marked, do: "btn-primary", else: "btn-default"} btn-xs" <%= "%\>" %>
+          </td>
+          <td><%= "<%=" %> <%= to_singular %>.id <%= "%\>" %></td>
+          <td><%= "<%=" %> <%= to_singular %>.name <%= "%\>" %></td>
+
+          <td class="text-right">
+            <%= "<%=" %> link "Show", to: <%= to_singular %>_path(@conn, :show, <%= to_singular %>), class: "btn btn-default btn-xs" <%= "%\>" %>
+            <%= "<%=" %> link "Edit", to: <%= to_singular %>_path(@conn, :edit, <%= to_singular %>), class: "btn btn-default btn-xs" <%= "%\>" %>
+            <%= "<%=" %> link "Delete", to: <%= to_singular %>_path(@conn, :delete, <%= to_singular %>), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" <%= "%\>" %>
+          </td>
+        </tr>
+    <%= "<%" %> end <%= "%\>" %>
+      </tbody>
+    </table>
+
+    <%= "<%=" %> link "New <%= to_singular %>", to: <%= to_singular %>_path(@conn, :new) <%= "%\>" %>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  <%= "<%=" %> for <%= to_singular %> <- @<%= to_plural %> do <%= "%\>" %>
+    <%= "<%=" %> if <%= to_singular %>.marked do <%= "%\>" %>
+      <%= "<%=" %>
+        raw "connect('from_#{@from}', 'to_#{<%= to_singular %>.id}', 'green', 1)"
+      <%= "%\>" %>
+    <%= "<%" %> end <%= "%\>" %>
+  <%= "<%" %> end <%= "%\>" %>
+</script>
