@@ -65,9 +65,9 @@ defmodule Mix.Tasks.Gen.Connect do
       [from_plural: from_plural, to_plural: to_plural]
 
     Mix.Phoenix.copy_from paths(), "priv/templates/gen.html", "", binding, [
-      {:eex, "connect_controller.ex.t",       "web/controllers/#{path}_connect_controller.ex"},
-      {:eex, "connect.html.eex.t",      "web/templates/#{path}_connect/connect.html.eex"},
-      {:eex, "connect_view.ex.t",             "web/views/#{path}_connect_view.ex"},
+      {:eex, "connect_controller.ex",       "web/controllers/#{path}_connect_controller.ex"},
+      {:eex, "connect.html.eex",      "web/templates/#{path}_connect/connect.html.eex"},
+      {:eex, "connect_view.ex",             "web/views/#{path}_connect_view.ex"},
     ]
   end
 
