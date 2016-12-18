@@ -1,4 +1,4 @@
-defmodule Models do
+defmodule Modelsx do
   import ModelTypes
 
   def models do
@@ -34,7 +34,7 @@ defmodule Models do
 end
 
 
-defmodule ModelsX do
+defmodule Models do
   import ModelTypes
 
   def models do
