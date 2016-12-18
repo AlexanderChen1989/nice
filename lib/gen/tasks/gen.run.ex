@@ -42,7 +42,7 @@ defmodule Mix.Tasks.Gen.Run do
   end
 
   defp api_tasks do
-    models = Models.models ++ Models.connect_models
+    models = Models.models
 
     models
     |> Enum.map(fn {model, table, fields} ->
