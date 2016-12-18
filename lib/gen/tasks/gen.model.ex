@@ -116,7 +116,7 @@ defmodule Mix.Tasks.Gen.Model do
                assocs: assocs(assocs), indexes: indexes(plural, assocs, uniques),
                schema_defaults: schema_defaults(attrs), binary_id: opts[:binary_id],
                migration_defaults: migration_defaults(attrs), params: params]
-
+    IO.inspect many_to_manys
     files = [
       {:eex, "model.ex",       "web/models/#{path}.ex"},
       {:eex, "model_test.exs", "test/models/#{path}_test.exs"},
