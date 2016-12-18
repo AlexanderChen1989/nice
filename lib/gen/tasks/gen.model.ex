@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Phoenix.Gen.Model do
+defmodule Mix.Tasks.Gen.Model do
   use Mix.Task
 
   @shortdoc "Generates an Ecto model"
@@ -83,24 +83,36 @@ defmodule Mix.Tasks.Phoenix.Gen.Model do
   configuration or `--migration` to force generation of the migration.
   """
   def run(args) do
-    switches = [migration: :boolean, binary_id: :boolean, instructions: :string]
+    switches = [connect: :keep, migration: :boolean, binary_id: :boolean, instructions: :string]
     {opts, parsed, _} = OptionParser.parse(args, switches: switches)
     [singular, plural | attrs] = validate_args!(parsed)
 
     default_opts = Application.get_env(:phoenix, :generators, [])
     opts = Keyword.merge(default_opts, opts)
-
     uniques   = Mix.Phoenix.uniques(attrs)
     attrs     = Mix.Phoenix.attrs(attrs)
     binding   = Mix.Phoenix.inflect(singular)
     params    = Mix.Phoenix.params(attrs)
     path      = binding[:path]
 
+    connects = Keyword.get_values(opts, :connect)
+
+    many_to_manys = for connect <- connects do
+      [from, to] = String.split(connect, ":")
+      field = Macro.underscore(to) <> "s"
+      to_module = "#{binding[:base]}.#{to}"
+      join =
+        "#{from}To#{to}s"
+        |> Macro.underscore()
+
+      "many_to_many :#{field}, #{to_module}, join_through: \"#{join}\""
+    end
+
     Mix.Phoenix.check_module_name_availability!(binding[:module])
     {assocs, attrs} = partition_attrs_and_assocs(attrs)
 
     binding = binding ++
-              [attrs: attrs, plural: plural, types: types(attrs), uniques: uniques,
+              [many_to_manys: many_to_manys, attrs: attrs, plural: plural, types: types(attrs), uniques: uniques,
                assocs: assocs(assocs), indexes: indexes(plural, assocs, uniques),
                schema_defaults: schema_defaults(attrs), binary_id: opts[:binary_id],
                migration_defaults: migration_defaults(attrs), params: params]
