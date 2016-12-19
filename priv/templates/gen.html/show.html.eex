@@ -11,7 +11,7 @@
     <li>
      <strong><%= title %></strong>
 
-     <%= "<%=" %> link <%= title %>, to: <%= path %>(@conn, :index, <%= params %>) <%= "%\>" %>
+     <%= "<%=" %> link <%= inspect title %>, to: <%= path %>(@conn, :index, <%= params %>) <%= "%\>" %>
     </li>
 <% end %>
 </ul>
