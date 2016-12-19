@@ -67,16 +67,48 @@ defmodule <%= module %>Controller do
     end
   end
 
+<%= for {_, _, from_id} <- from_items do %>
+  def show(conn, %{"id" => id, <%= inspect from_id %> => <%= from_id %>}) do
+    <%= singular %> = Repo.get!(<%= alias %>, id)
+    render(conn, "show.html", <%= singular %>: <%= singular %>, params: %{<%= inspect from_id %> => <%= from_id %>})
+  end
+<% end %>
+
   def show(conn, %{"id" => id}) do
     <%= singular %> = Repo.get!(<%= alias %>, id)
-    render(conn, "show.html", <%= singular %>: <%= singular %>)
+    render(conn, "show.html", <%= singular %>: <%= singular %>, params: %{})
   end
+
+<%= for {_, _, from_id} <- from_items do %>
+  def edit(conn, %{"id" => id, <%= inspect from_id %> => <%= from_id %>}) do
+    <%= singular %> = Repo.get!(<%= alias %>, id)
+    changeset = <%= alias %>.changeset(<%= singular %>)
+    render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset, params: %{<%= inspect from_id %> => <%= from_id %>})
+  end
+<% end %>
 
   def edit(conn, %{"id" => id}) do
     <%= singular %> = Repo.get!(<%= alias %>, id)
     changeset = <%= alias %>.changeset(<%= singular %>)
-    render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset)
+    render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset, params: %{})
   end
+
+
+<%= for {_, _, from_id} <- from_items do %>
+  def update(conn, %{"id" => id, <%= inspect singular %> => <%= singular %>_params, <%= inspect from_id %> => <%= from_id %>}) do
+    <%= singular %> = Repo.get!(<%= alias %>, id)
+    changeset = <%= alias %>.changeset(<%= singular %>, <%= singular %>_params)
+
+    case Repo.update(changeset) do
+      {:ok, <%= singular %>} ->
+        conn
+        |> put_flash(:info, "<%= human %> updated successfully.")
+        |> redirect(to: <%= singular %>_path(conn, :show, <%= singular %>, %{<%= inspect from_id %> => <%= from_id %>}))
+      {:error, changeset} ->
+        render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset, params: %{<%= inspect from_id %> => <%= from_id %>})
+    end
+  end
+<% end %>
 
   def update(conn, %{"id" => id, <%= inspect singular %> => <%= singular %>_params}) do
     <%= singular %> = Repo.get!(<%= alias %>, id)
