@@ -2,6 +2,8 @@ defmodule <%= module %>Controller do
   use <%= base %>.Web, :controller
 
   alias <%= module %>
+  <%= for {from_module} <- from_items do %>
+  alias <%= from_module %><% end %>
 
   def index(conn, _params) do
     <%= plural %> = Repo.all(<%= alias %>)

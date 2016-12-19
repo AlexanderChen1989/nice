@@ -25,11 +25,10 @@ defmodule Mix.Tasks.Gen.Html do
   information on attributes and namespaced resources.
   """
   def run(args) do
-    switches = [to: :keep, binary_id: :boolean, model: :boolean]
+    switches = [to: :keep, from: :keep, binary_id: :boolean, model: :boolean]
 
     {opts, parsed, _} = OptionParser.parse(args, switches: switches)
     [singular, plural | attrs] = validate_args!(parsed)
-    tos = Keyword.get_values(opts, :to)
     default_opts = Application.get_env(:phoenix, :generators, [])
     opts = Keyword.merge(default_opts, opts)
 
@@ -42,16 +41,26 @@ defmodule Mix.Tasks.Gen.Html do
                           inputs: inputs(attrs), params: Mix.Phoenix.params(attrs),
                           template_singular: String.replace(binding[:singular], "_", " "),
                           template_plural: String.replace(plural, "_", " ")]
-    from_singular = Keyword.fetch!(binding, :singular)
+
+    tos = Keyword.get_values(opts, :to)
 
     to_items = for to <- tos do
       title = "\"#{to}s\""
       path = "#{Macro.underscore(to)}_path"
+      from_singular = Keyword.fetch!(binding, :singular)
       params = "%{#{from_singular}_id: @#{from_singular}.id}"
       {title, path, params}
     end
 
-    binding = binding ++ [to_items: to_items]
+    froms = Keyword.get_values(opts, :from)
+
+    from_items = for from <- froms do
+      base = Keyword.fetch!(binding, :base)
+      from_module = "#{base}.#{from}"
+      {from_module}
+    end
+
+    binding = binding ++ [from_items: from_items, to_items: to_items]
 
     IO.inspect binding
 
