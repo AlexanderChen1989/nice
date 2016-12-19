@@ -105,7 +105,7 @@ defmodule Mix.Tasks.Gen.Model do
         "#{from}To#{to}s"
         |> Macro.underscore()
 
-      "many_to_many :#{field}, #{to_module}, join_through: \"#{join}\""
+      "many_to_many :#{field}, #{to_module}, on_delete: :delete_all, join_through: \"#{join}\""
     end
 
     Mix.Phoenix.check_module_name_availability!(binding[:module])
