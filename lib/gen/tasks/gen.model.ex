@@ -119,7 +119,7 @@ defmodule Mix.Tasks.Gen.Model do
     IO.inspect many_to_manys
     files = [
       {:eex, "model.ex",       "web/models/#{path}.ex"},
-      {:eex, "model_test.exs", "test/models/#{path}_test.exs"},
+      # {:eex, "model_test.exs", "test/models/#{path}_test.exs"},
     ] ++ migration(opts[:migration], path)
 
     Mix.Phoenix.copy_from paths(), "priv/templates/gen.model", "", binding, files

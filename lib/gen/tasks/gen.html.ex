@@ -68,8 +68,6 @@ defmodule Mix.Tasks.Gen.Html do
 
     binding = binding ++ [field_key: field_key, from_items: from_items, to_items: to_items]
 
-    IO.inspect binding
-
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "Controller")
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "View")
 
@@ -81,7 +79,7 @@ defmodule Mix.Tasks.Gen.Html do
       {:eex, "new.html.eex",        "web/templates/#{path}/new.html.eex"},
       {:eex, "show.html.eex",       "web/templates/#{path}/show.html.eex"},
       {:eex, "view.ex",             "web/views/#{path}_view.ex"},
-      {:eex, "controller_test.exs", "test/controllers/#{path}_controller_test.exs"},
+      # {:eex, "controller_test.exs", "test/controllers/#{path}_controller_test.exs"},
     ]
 
     instructions = """
