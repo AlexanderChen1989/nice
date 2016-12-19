@@ -7,6 +7,13 @@
     <%= "<%=" %> @<%= singular %>.<%= k %> <%= "%\>" %>
   </li>
 <% end %>
+<%= for {title, path, params} <- to_items do %>
+    <li>
+     <strong><%= title %></strong>
+
+     <%= "<%=" %> link <%= title %>, to: <%= path %>(@conn, :index, <%= params %>) <%= "%\>" %>
+    </li>
+<% end %>
 </ul>
 
 <%= "<%=" %> link "Edit", to: <%= singular %>_path(@conn, :edit, @<%= singular %>) <%= "%\>" %>

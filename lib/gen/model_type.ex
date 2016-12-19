@@ -12,6 +12,18 @@ defmodule ModelType do
       @behaviour ModelDefinition
       import ModelType
 
+      def tos(from) do
+        connects
+        |> Enum.filter(fn {f, _} -> f == from end)
+        |> Enum.map(fn {_, t} -> t end)
+      end
+
+      def froms(to) do
+        connects
+        |> Enum.filter(fn {_, t} -> t == to end)
+        |> Enum.map(fn {f, _} -> f end)
+      end
+
       def connect_models() do
         ms = Enum.map(models, fn {m, _, _} -> m end)
 

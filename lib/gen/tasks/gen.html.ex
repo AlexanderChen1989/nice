@@ -25,11 +25,11 @@ defmodule Mix.Tasks.Gen.Html do
   information on attributes and namespaced resources.
   """
   def run(args) do
-    switches = [binary_id: :boolean, model: :boolean]
+    switches = [to: :keep, binary_id: :boolean, model: :boolean]
 
     {opts, parsed, _} = OptionParser.parse(args, switches: switches)
     [singular, plural | attrs] = validate_args!(parsed)
-
+    tos = Keyword.get_values(opts, :to)
     default_opts = Application.get_env(:phoenix, :generators, [])
     opts = Keyword.merge(default_opts, opts)
 
@@ -42,6 +42,18 @@ defmodule Mix.Tasks.Gen.Html do
                           inputs: inputs(attrs), params: Mix.Phoenix.params(attrs),
                           template_singular: String.replace(binding[:singular], "_", " "),
                           template_plural: String.replace(plural, "_", " ")]
+    from_singular = Keyword.fetch!(binding, :singular)
+
+    to_items = for to <- tos do
+      title = "\"#{to}s\""
+      path = "#{Macro.underscore(to)}_path"
+      params = "%{#{from_singular}_id: @#{from_singular}.id}"
+      {title, path, params}
+    end
+
+    binding = binding ++ [to_items: to_items]
+
+    IO.inspect binding
 
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "Controller")
     Mix.Phoenix.check_module_name_availability!(binding[:module] <> "View")
