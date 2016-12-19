@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Gen.Connect do
+defmodule Mix.Tasks.Gen.Html do
   use Mix.Task
 
   @shortdoc "Generates controller, model and views for an HTML based resource"
@@ -43,32 +43,32 @@ defmodule Mix.Tasks.Gen.Connect do
                           template_singular: String.replace(binding[:singular], "_", " "),
                           template_plural: String.replace(plural, "_", " ")]
 
-    Mix.Phoenix.check_module_name_availability!(binding[:module] <> "ConnectController")
-    Mix.Phoenix.check_module_name_availability!(binding[:module] <> "ConnectView")
+    Mix.Phoenix.check_module_name_availability!(binding[:module] <> "Controller")
+    Mix.Phoenix.check_module_name_availability!(binding[:module] <> "View")
 
-    [from, to] =
-      Keyword.get(binding, :alias)
-      |> String.split("To")
-
-    [from_singular, to_singular] =
-      Keyword.get(binding, :singular)
-      |> String.split("_to_")
-
-    [from_plural, to_plural] =
-      [from_singular, to_singular]
-      |> Enum.map(& &1 <> "s")
-
-    binding =
-      binding ++
-      [from: from, to: to] ++
-      [from_singular: from_singular, to_singular: to_singular] ++
-      [from_plural: from_plural, to_plural: to_plural]
-
-    Mix.Phoenix.copy_from paths(), "priv/templates/gen.connect", "", binding, [
-      {:eex, "connect_controller.ex",       "web/controllers/#{path}_connect_controller.ex"},
-      {:eex, "connect.html.eex",      "web/templates/#{path}_connect/connect.html.eex"},
-      {:eex, "connect_view.ex",             "web/views/#{path}_connect_view.ex"},
+    Mix.Phoenix.copy_from paths(), "priv/templates/gen.html", "", binding, [
+      {:eex, "controller.ex",       "web/controllers/#{path}_controller.ex"},
+      {:eex, "edit.html.eex",       "web/templates/#{path}/edit.html.eex"},
+      {:eex, "form.html.eex",       "web/templates/#{path}/form.html.eex"},
+      {:eex, "index.html.eex",      "web/templates/#{path}/index.html.eex"},
+      {:eex, "new.html.eex",        "web/templates/#{path}/new.html.eex"},
+      {:eex, "show.html.eex",       "web/templates/#{path}/show.html.eex"},
+      {:eex, "view.ex",             "web/views/#{path}_view.ex"},
+      {:eex, "controller_test.exs", "test/controllers/#{path}_controller_test.exs"},
     ]
+
+    instructions = """
+
+    Add the resource to your browser scope in web/router.ex:
+
+        resources "/#{route}", #{binding[:scoped]}Controller
+    """
+
+    if opts[:model] != false do
+      Mix.Task.run "phoenix.gen.model", ["--instructions", instructions|args]
+    else
+      Mix.shell.info instructions
+    end
   end
 
   defp sample_id(opts) do
