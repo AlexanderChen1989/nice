@@ -12,7 +12,7 @@ config :nice,
 # Configures the endpoint
 config :nice, Nice.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "iUQ4qirqdwAm+MqS3rPBFBd6TRe9n2waQFir7CrgqGZ2SsW/NWslhuAKAx34TWY/",
+  secret_key_base: "lMZ1ayIPC12EvunVBa1j/FG6caP6VPNFONKBKZoOEhCbDqvsgIG7P2P9WzbKhU7w",
   render_errors: [view: Nice.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Nice.PubSub,
            adapter: Phoenix.PubSub.PG2]

@@ -1,6 +1,6 @@
 defmodule Nice.Web do
   @moduledoc """
-  A module defining __using__ hooks for controllers,
+  A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:

@@ -36,7 +36,7 @@ defmodule Nice.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_nice_key",
-    signing_salt: "tcbDQksO"
+    signing_salt: "E2KBq4GY"
 
   plug Nice.Router
 end
