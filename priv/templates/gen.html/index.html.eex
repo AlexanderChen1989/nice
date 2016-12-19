@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-<%= "<%=" %> for <%= singular %> <- @<%= plural %> do <%= "%\>" %>
+<%= "<%=" %> for <%= singular %> <- @<%= field_key %> do <%= "%\>" %>
     <tr>
 <%= for {k, _} <- attrs do %>      <td><%= "<%=" %> <%= singular %>.<%= k %> <%= "%\>" %></td>
 <% end %>

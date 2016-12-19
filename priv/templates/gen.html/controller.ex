@@ -2,12 +2,23 @@ defmodule <%= module %>Controller do
   use <%= base %>.Web, :controller
 
   alias <%= module %>
-  <%= for {from_module} <- from_items do %>
-  alias <%= from_module %><% end %>
 
-  def index(conn, _params) do
-    <%= plural %> = Repo.all(<%= alias %>)
-    render(conn, "index.html", <%= plural %>: <%= plural %>)
+<%= for {from_module, connect_module, from_id} <- from_items do %>
+  def index(conn, %{<%= from_id %> => id} = params) do
+    q = from c in <%= from_module %>,
+      where: [id: ^id],
+      preload: :<%= field_key %>,
+      select: c
+
+    c = Repo.one(q)
+
+    render(conn, "index.html", <%= field_key %>: c.<%= field_key %>, params: params)
+  end
+<% end %>
+
+  def index(conn, params) do
+    <%= field_key %> = Repo.all(<%= alias %>)
+    render(conn, "index.html", <%= field_key %>: <%= field_key %>, params)
   end
 
   def new(conn, _params) do

@@ -47,20 +47,26 @@ defmodule Mix.Tasks.Gen.Html do
     to_items = for to <- tos do
       title = "\"#{to}s\""
       path = "#{Macro.underscore(to)}_path"
-      from_singular = Keyword.fetch!(binding, :singular)
-      params = "%{#{from_singular}_id: @#{from_singular}.id}"
+      self_singular = Keyword.fetch!(binding, :singular)
+      params = "%{#{self_singular}_id: @#{self_singular}.id}"
       {title, path, params}
     end
 
     froms = Keyword.get_values(opts, :from)
 
+    self_singular = Keyword.fetch!(binding, :singular)
+    field_key = "#{self_singular}s"
+
     from_items = for from <- froms do
       base = Keyword.fetch!(binding, :base)
+      self_module = Keyword.fetch!(binding, :alias)
       from_module = "#{base}.#{from}"
-      {from_module}
+      connect_module = "#{base}.#{from}To#{self_module}"
+      from_id = "\"#{Macro.underscore(from)}_id\""
+      {from_module, connect_module, from_id}
     end
 
-    binding = binding ++ [from_items: from_items, to_items: to_items]
+    binding = binding ++ [field_key: field_key, from_items: from_items, to_items: to_items]
 
     IO.inspect binding
 
