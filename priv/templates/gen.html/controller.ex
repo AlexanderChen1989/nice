@@ -4,7 +4,7 @@ defmodule <%= module %>Controller do
   alias <%= module %>
 
 <%= for {from_module, connect_module, from_id} <- from_items do %>
-  def index(conn, %{<%= from_id %> => id} = params) do
+  def index(conn, %{<%= inspect from_id %> => id} = params) do
     q = from c in <%= from_module %>,
       where: [id: ^id],
       preload: :<%= field_key %>,
@@ -21,12 +21,40 @@ defmodule <%= module %>Controller do
     render(conn, "index.html", <%= field_key %>: <%= field_key %>, params)
   end
 
-  def new(conn, _params) do
+  def new(conn, params) do
     changeset = <%= alias %>.changeset(%<%= alias %>{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, params: params)
   end
 
-  def create(conn, %{<%= inspect singular %> => <%= singular %>_params}) do
+<%= for {from_module, connect_module, from_id} <- from_items do %>
+  def create(conn, %{<%= inspect singular %> => <%= singular %>_params, <%= inspect from_id %> => <%= from_id %>}) do
+    {_, result} =
+      Repo.transaction fn ->
+        changeset = <%= alias %>.changeset(%<%= alias %>{}, <%= singular %>_params)
+        with {:ok, %{id: product_id}} <- Repo.insert(changeset) do
+          ctp_params = %{
+            <%= singular %>_id: <%= singular %>_id,
+            <%= from_id %>: <%= from_id %>
+          }
+
+          %<%= connect_module %>{}
+          |> <%= connect_module %>(ctp_params)
+          |> Repo.insert()
+        end
+      end
+
+    case result do
+      {:ok, _<%= singular %>} ->
+        conn
+        |> put_flash(:info, "<%= human %> created successfully.")
+        |> redirect(to: <%= singular %>_path(conn, :index, %{<%= inspect from_id %> => <%= from_id %>}))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset, params: %{<%= inspect from_id %> => <%= from_id %>})
+    end
+  end
+<% end %>
+
+  def create(conn, %{<%= inspect singular %> => <%= singular %>_params} = params) do
     changeset = <%= alias %>.changeset(%<%= alias %>{}, <%= singular %>_params)
 
     case Repo.insert(changeset) do
@@ -35,7 +63,7 @@ defmodule <%= module %>Controller do
         |> put_flash(:info, "<%= human %> created successfully.")
         |> redirect(to: <%= singular %>_path(conn, :index))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, params: %{})
     end
   end
 
@@ -63,6 +91,20 @@ defmodule <%= module %>Controller do
         render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset)
     end
   end
+
+<%= for {_, _, from_id} <- from_items do %>
+  def delete(conn, %{"id" => id, <%= inspect from_id %> => <%= from_id %>}) do
+    <%= singular %> = Repo.get!(<%= alias %>, id)
+
+    # Here we use delete! (with a bang) because we expect
+    # it to always work (and if it does not, it will raise).
+    Repo.delete!(<%= singular %>)
+
+    conn
+    |> put_flash(:info, "<%= human %> deleted successfully.")
+    |> redirect(to: <%= singular %>_path(conn, :index, %{<%= inspect from_id %> => <%= from_id %>}))
+  end
+<% end %>
 
   def delete(conn, %{"id" => id}) do
     <%= singular %> = Repo.get!(<%= alias %>, id)

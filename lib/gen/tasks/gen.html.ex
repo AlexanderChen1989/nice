@@ -62,7 +62,7 @@ defmodule Mix.Tasks.Gen.Html do
       self_module = Keyword.fetch!(binding, :alias)
       from_module = "#{base}.#{from}"
       connect_module = "#{base}.#{from}To#{self_module}"
-      from_id = "\"#{Macro.underscore(from)}_id\""
+      from_id = "#{Macro.underscore(from)}_id"
       {from_module, connect_module, from_id}
     end
 
