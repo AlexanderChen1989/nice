@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Gen.Run do
       Models.connects
       |> Enum.filter(fn {from, _} -> from == model end)
       |> Enum.map(fn {from, to} -> ["--connect", "#{from}:#{to}"] end)
-      |> List.flatten 
+      |> List.flatten
   end
 
   defp connect_model_tasks do
@@ -71,9 +71,20 @@ defmodule Mix.Tasks.Gen.Run do
   defp html_tasks do
     Models.models
     |> Enum.map(fn {model, table, fields} ->
+
+        froms =
+          Models.froms(model)
+          |> Enum.map(& ["--from", &1])
+          |> List.flatten
+
+        tos =
+          Models.tos(model)
+          |> Enum.map(& ["--to", &1])
+          |> List.flatten
+
         {
-          "phoenix.gen.html",
-          ["#{model}", "#{table}"] ++ fields ++ ["--no-model"]
+          "gen.html",
+          ["#{model}", "#{table}"] ++ fields ++ froms ++ tos ++ ["--no-model"]
         }
       end)
   end

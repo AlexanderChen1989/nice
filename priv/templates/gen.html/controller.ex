@@ -18,7 +18,7 @@ defmodule <%= module %>Controller do
 
   def index(conn, params) do
     <%= field_key %> = Repo.all(<%= alias %>)
-    render(conn, "index.html", <%= field_key %>: <%= field_key %>, params)
+    render(conn, "index.html", <%= field_key %>: <%= field_key %>, params: params)
   end
 
   def new(conn, params) do
@@ -31,14 +31,14 @@ defmodule <%= module %>Controller do
     {_, result} =
       Repo.transaction fn ->
         changeset = <%= alias %>.changeset(%<%= alias %>{}, <%= singular %>_params)
-        with {:ok, %{id: product_id}} <- Repo.insert(changeset) do
+        with {:ok, %{id:  <%= singular %>_id}} <- Repo.insert(changeset) do
           ctp_params = %{
             <%= singular %>_id: <%= singular %>_id,
             <%= from_id %>: <%= from_id %>
           }
 
           %<%= connect_module %>{}
-          |> <%= connect_module %>(ctp_params)
+          |> <%= connect_module %>.changeset(ctp_params)
           |> Repo.insert()
         end
       end
@@ -54,7 +54,7 @@ defmodule <%= module %>Controller do
   end
 <% end %>
 
-  def create(conn, %{<%= inspect singular %> => <%= singular %>_params} = params) do
+  def create(conn, %{<%= inspect singular %> => <%= singular %>_params}) do
     changeset = <%= alias %>.changeset(%<%= alias %>{}, <%= singular %>_params)
 
     case Repo.insert(changeset) do
