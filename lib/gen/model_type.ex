@@ -38,7 +38,10 @@ defmodule ModelType do
 
             model = "#{from}To#{to}"
             table = "#{from_lower}_to_#{to_lower}s"
-            fields = ["#{from_lower}_id:integer", "#{to_lower}_id:integer"]
+            fields = [
+              "#{from_lower}_id:references:#{from_lower}s",
+              "#{to_lower}_id:references:#{to_lower}s"
+            ]
 
             {model, table, fields}
           end)
