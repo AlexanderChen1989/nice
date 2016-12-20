@@ -6,8 +6,8 @@ defmodule Mix.Tasks.Gen.Run do
       model_tasks ++
       connect_model_tasks ++
       html_tasks ++
-      connect_tasks ++
-      api_tasks
+      connect_tasks
+      # api_tasks
 
     tasks
     |> Enum.each(&exec/1)

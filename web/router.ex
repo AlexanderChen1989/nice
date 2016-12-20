@@ -27,11 +27,7 @@ defmodule Nice.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", Nice do
-    pipe_through :api
-    # API Routes
-    resources "/users", API.UserController, except: [:new, :edit]
-    resources "/profiles", API.ProfileController, except: [:new, :edit]
-
-  end
+  # scope "/api", Nice do
+  #   pipe_through :api
+  # end
 end

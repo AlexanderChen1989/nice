@@ -12,9 +12,9 @@ defmodule Mix.Tasks.Gen.Routes do
     connect_routes
     |> Enum.each(&IO.puts/1)
 
-    IO.puts "\n# API Routes"
-    api_routes
-    |> Enum.each(&IO.puts/1)
+    # IO.puts "\n# API Routes"
+    # api_routes
+    # |> Enum.each(&IO.puts/1)
 
   end
 
