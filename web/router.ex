@@ -26,6 +26,10 @@ defmodule Nice.Router do
     get "/", PageController, :index
   end
 
+  get "/graphiql", Absinthe.Plug.GraphiQL, schema: Nice.Schema
+  post "/graphiql", Absinthe.Plug.GraphiQL, schema: Nice.Schema
+  forward "/graphql", Absinthe.Plug, schema: Nice.Schema
+
   # Other scopes may use custom stacks.
   scope "/api", Nice do
     pipe_through :api
