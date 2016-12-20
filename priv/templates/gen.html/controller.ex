@@ -120,7 +120,7 @@ defmodule <%= module %>Controller do
         |> put_flash(:info, "<%= human %> updated successfully.")
         |> redirect(to: <%= singular %>_path(conn, :show, <%= singular %>))
       {:error, changeset} ->
-        render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset)
+        render(conn, "edit.html", <%= singular %>: <%= singular %>, changeset: changeset, params: %{})
     end
   end
 
