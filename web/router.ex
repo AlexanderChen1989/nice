@@ -15,6 +15,12 @@ defmodule Nice.Router do
 
   scope "/", Nice do
     pipe_through :browser # Use the default browser stack
+    resources "/dogs", DogController
+    resources "/pigs", PigController
+    resources "/owners", OwnerController
+    resources "/cats", CatController
+    resources "/cows", CowController
+
     # HTML Routes
     resources "/users", UserController
     resources "/profiles", ProfileController

@@ -31,11 +31,11 @@ defmodule Relation do
           fb = Macro.underscore(b)
           [
             "mix",
-            "phoenix.gen.models",
+            "phoenix.gen.model",
             "#{m}",
             "#{t}",
-            "#{fa}_id:refrences:#{fa}s",
-            "#{fb}_id:refrences:#{fb}s",
+            "#{fa}_id:references:#{fa}s",
+            "#{fb}_id:references:#{fb}s",
           ]
           end)
       end
