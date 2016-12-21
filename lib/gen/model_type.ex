@@ -1,15 +1,7 @@
-defmodule ModelDefinition do
-  @type model :: {String.t, String.t, list(String.t)}
-  @type connect :: {String.t, String.t}
-
-  @callback models() :: list(model)
-  @callback connects() :: list(connect)
-end
-
 defmodule ModelType do
   defmacro __using__(_) do
     quote do
-      @behaviour ModelDefinition
+      @behaviour RelationDefinition
       import ModelType
 
       def tos(from) do
