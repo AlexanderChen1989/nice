@@ -92,7 +92,6 @@ defmodule Nice.CowToCatController do
 
   def delete_cow_to_cat(_, cow_id, cat_id) do
     cc = Repo.get_by!(CowToCat, cow_id: cow_id, cat_id: cat_id)
-    IO.inspect cc
     Repo.delete(cc)
   end
 
