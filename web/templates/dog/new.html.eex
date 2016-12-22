@@ -1,0 +1,6 @@
+<h2>New dog</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: dog_path(@conn, :create, @params) %>
+
+<%= link "Back", to: dog_path(@conn, :index, @params) %>

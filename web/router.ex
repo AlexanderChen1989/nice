@@ -15,19 +15,20 @@ defmodule Nice.Router do
 
   scope "/", Nice do
     pipe_through :browser # Use the default browser stack
-    resources "/dogs", DogController
-    resources "/pigs", PigController
-    resources "/owners", OwnerController
-    resources "/cats", CatController
-    resources "/cows", CowController
 
     # HTML Routes
-    resources "/users", UserController
-    resources "/profiles", ProfileController
+    resources "/dogs", DogController
+    resources "/pigs", PigController
+    resources "/cows", CowController
+    resources "/cats", CatController
 
     # Connect Routes
-    get "/connect/user_to_profiles", UserToProfileConnectController, :connect
-    get "/connect/user_to_profiles/toggle", UserToProfileConnectController, :toggle
+    get "/connect/dog_to_cats", DogToCatConnectController, :connect
+    get "/connect/dog_to_cats/toggle", DogToCatConnectController, :toggle
+    get "/connect/pig_to_cats", PigToCatConnectController, :connect
+    get "/connect/pig_to_cats/toggle", PigToCatConnectController, :toggle
+    get "/connect/cow_to_cats", CowToCatConnectController, :connect
+    get "/connect/cow_to_cats/toggle", CowToCatConnectController, :toggle
 
     get "/", PageController, :index
   end

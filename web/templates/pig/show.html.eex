@@ -1,0 +1,20 @@
+<h2>Show pig</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @pig.name %>
+  </li>
+
+
+    <li>
+     <strong>Cats</strong>
+
+     <%= link "Cats", to: cat_path(@conn, :index, %{pig_id: @pig.id}) %>
+    </li>
+
+</ul>
+
+<%= link "Edit", to: pig_path(@conn, :edit, @pig, @params) %>
+<%= link "Back", to: pig_path(@conn, :index, @params) %>

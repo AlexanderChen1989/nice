@@ -1,0 +1,26 @@
+<h2>Listing dogs</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for dog <- @dogs do %>
+    <tr>
+      <td><%= dog.name %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: dog_path(@conn, :show, dog, @params), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: dog_path(@conn, :edit, dog, @params), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: dog_path(@conn, :delete, dog, @params), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New dog", to: dog_path(@conn, :new, @params) %>
