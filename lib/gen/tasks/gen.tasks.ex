@@ -1,3 +1,12 @@
+defmodule Mix.Tasks.Gen.Tasks.Connect do
+  use Mix.Task
+
+  def run(_) do
+    IO.puts "OK"
+  end
+end
+
+
 defmodule Mix.Tasks.Gen.Tasks.Routes do
   use Mix.Task
 
@@ -9,14 +18,20 @@ defmodule Mix.Tasks.Gen.Tasks.Routes do
   end
 end
 
-defmodule Mix.Tasks.Gen.Tasks do
+defmodule Mix.Tasks.Gen.Tasks.Run do
   use Mix.Task
 
   def run(_) do
     Models.tasks
     |> Enum.map(&remove_empty/1)
     |> Enum.map(fn [_, task | args] -> {task, args} end)
-    |> Enum.map(&exec/1)
+    |> Enum.map(&puts_tasks/1)
+    # |> Enum.map(&exec/1)
+  end
+
+  def puts_tasks({task, args}) do
+    IO.puts "#{task} #{args |> Enum.join(" ")}"
+    {task, args}
   end
 
   def remove_empty(lst) do
