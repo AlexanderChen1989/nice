@@ -19,5 +19,6 @@ defmodule Models do
     {"Pig", :has_one, "Cat"},
     {"Owner", :many_to_many, "Cat"},
     {"Cat", :has_one, "Cow"},
+    {"Pig", :many_to_many, "Cow"},
   ]
 end
