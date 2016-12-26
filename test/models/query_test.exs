@@ -59,7 +59,6 @@ defmodule Nice.ConnectQuery do
     end
   end
 
-
   def owner_del_cat(owner_id, cat_id) do
     query =
       from owner_to_cat in OwnerToCat,
@@ -70,8 +69,16 @@ defmodule Nice.ConnectQuery do
   end
 
   def owner_with_cats(owner_id) do
-  end
+    query =
+      from owner in Owner,
+        where: [id: ^owner_id],
+        preload: :cats
 
+    case Repo.one(query) do
+      nil -> {:error, "Owner not found"}
+      owner -> {:ok, owner}
+    end
+  end
 end
 
 defmodule Nice.OwnerToCatQueryTest do
@@ -96,6 +103,13 @@ defmodule Nice.OwnerToCatQueryTest do
     test "delete a cat from owner", %{owner: owner, cat: cat} do
       {:ok, num} = ConnectQuery.owner_del_cat(owner.id, cat.id)
       assert num == 1
+    end
+
+    test "fetch o owner by id with cats preloaded", %{owner: owner, cat: cat} do
+      {:ok, _owner} = ConnectQuery.owner_with_cats(owner.id)
+      assert _owner.id == owner.id
+      [_cat] = _owner.cats
+      assert _cat.id == cat.id
     end
 
   end

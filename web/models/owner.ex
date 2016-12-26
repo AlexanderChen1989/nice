@@ -4,6 +4,7 @@ defmodule Nice.Owner do
   schema "owners" do
     field :name, :string
 
+    many_to_many :cats, Nice.Cat, join_through: "owner_to_cats", on_delete: :delete_all
     timestamps()
   end
 
