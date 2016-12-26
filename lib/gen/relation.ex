@@ -18,7 +18,42 @@ defmodule Relation do
       import Relation
 
       def tasks do
-        model_tasks ++ many_to_many_tasks
+        model_tasks ++ many_to_many_tasks ++ relation_tasks
+      end
+
+      defp relation_tasks do
+        many_to_many_models
+        |> Enum.map(fn {model, table, fields} ->
+            [
+              "mix",
+              "gen.connect"
+            ] ++ ["#{model}", "#{table}"] ++ fields
+          end)
+      end
+
+      def many_to_many_models do
+          Models.relations
+          |> Enum.filter(fn {_, rel, _} -> rel == :many_to_many end)
+          |> Enum.map(&parse_many_to_many/1)
+      end
+
+      def parse_many_to_many({from, _, to}) do
+        ms = Enum.map(models, fn {m, _, _} -> m end)
+        if (not from in ms) || (not to in ms) do
+         raise "#{from} or #{to} should in #{ms |> inspect}"
+        end
+
+        from_lower = Macro.underscore(from)
+        to_lower = Macro.underscore(to)
+
+        model = "#{from}To#{to}"
+        table = "#{from_lower}_to_#{to_lower}s"
+        fields = [
+         "#{from_lower}_id:references:#{from_lower}s",
+         "#{to_lower}_id:references:#{to_lower}s"
+        ]
+
+        {model, table, fields}
       end
 
       def many_to_many_tasks do

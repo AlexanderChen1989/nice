@@ -15,6 +15,12 @@ defmodule Mix.Tasks.Gen.Tasks.Routes do
     |> Enum.map(fn {model, table, _} ->
         IO.puts "resources \"/#{table}\", #{model}Controller"
       end)
+
+    Models.many_to_many_models
+    |> Enum.map(fn {model, table, _} ->
+        IO.puts "get \"/connect/#{table}\", #{model}ConnectController, :connect"
+        IO.puts "get \"/connect/#{table}/toggle\", #{model}ConnectController, :toggle"
+      end)
   end
 end
 
@@ -25,8 +31,8 @@ defmodule Mix.Tasks.Gen.Tasks.Run do
     Models.tasks
     |> Enum.map(&remove_empty/1)
     |> Enum.map(fn [_, task | args] -> {task, args} end)
-    |> Enum.map(&puts_tasks/1)
-    # |> Enum.map(&exec/1)
+    |> Enum.map(&exec/1)
+    # |> Enum.map(&puts_tasks/1)
   end
 
   def puts_tasks({task, args}) do
