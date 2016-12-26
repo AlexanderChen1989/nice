@@ -3,6 +3,10 @@ defmodule ConnectQuery do
     for {from, :many_to_many, to} <- Models.relations do
       from_s = Macro.underscore(from)
       to_s = Macro.underscore(to)
+      from = "Elixir.#{from}" |> String.to_atom
+      to = "Elixir.#{to}" |> String.to_atom
+      from_to_to = "Elixir.#{from}To#{to}" |> String.to_atom
+      from_to_to_s = "#{from_s}_to_#{to_s}"
 
       quote do
         alias Nice.ConnectQuery
