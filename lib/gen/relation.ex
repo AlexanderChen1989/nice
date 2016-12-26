@@ -22,7 +22,8 @@ defmodule Relation do
       end
 
       defp relation_tasks do
-        many_to_many_models
+        Models.relations
+        |> gen_many_to_many_models
         |> Enum.map(fn {model, table, fields} ->
             [
               "mix",
@@ -31,13 +32,13 @@ defmodule Relation do
           end)
       end
 
-      def many_to_many_models do
-          Models.relations
-          |> Enum.filter(fn {_, rel, _} -> rel == :many_to_many end)
-          |> Enum.map(&parse_many_to_many/1)
+      def gen_many_to_many_models(relations) do
+        relations
+        |> Enum.filter(fn {_, rel, _} -> rel == :many_to_many end)
+        |> Enum.map(&many_to_many_to_model/1)
       end
 
-      def parse_many_to_many({from, _, to}) do
+      def many_to_many_to_model({from, _, to}) do
         ms = Enum.map(models, fn {m, _, _} -> m end)
         if (not from in ms) || (not to in ms) do
          raise "#{from} or #{to} should in #{ms |> inspect}"
@@ -79,12 +80,12 @@ defmodule Relation do
         models
         |> sort_models(relations)
         |> Enum.map(fn {m, t, fs} ->
-            rs = references(m)
+            rs = references(m, relations)
             ["mix", "phoenix.gen.html", "#{m}", "#{t}"] ++ fs ++ rs
           end)
       end
 
-      def references(m) do
+      def references(m, relations) do
         relations
         |> Enum.filter(fn {a, to, b} -> b == m end)
         |> Enum.map(&gen_reference/1)

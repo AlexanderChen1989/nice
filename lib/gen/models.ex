@@ -1,5 +1,5 @@
 defmodule Models do
-  # use ModelType
+  use ModelType
   use Relation
 
   def models, do: [

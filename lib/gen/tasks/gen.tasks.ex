@@ -16,7 +16,8 @@ defmodule Mix.Tasks.Gen.Tasks.Routes do
         IO.puts "resources \"/#{table}\", #{model}Controller"
       end)
 
-    Models.many_to_many_models
+    Models.relations
+    |> Models.gen_many_to_many_models
     |> Enum.map(fn {model, table, _} ->
         IO.puts "get \"/connect/#{table}\", #{model}ConnectController, :connect"
         IO.puts "get \"/connect/#{table}/toggle\", #{model}ConnectController, :toggle"
