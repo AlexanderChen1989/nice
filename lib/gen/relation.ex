@@ -76,23 +76,18 @@ defmodule Relation do
       end
 
       def model_tasks do
-        Enum.zip(models, references)
-        |> Enum.map(fn {{m, t, fs}, {m, rs}} ->
+        models
+        |> sort_models(relations)
+        |> Enum.map(fn {m, t, fs} ->
+            rs = references(m)
             ["mix", "phoenix.gen.html", "#{m}", "#{t}"] ++ fs ++ rs
           end)
       end
 
-      def references do
-        ordered
-        |> Enum.map(&reference/1)
-      end
-
-      def reference(m) do
-        references =
-          relations
-          |> Enum.filter(fn {a, to, b} -> b == m end)
-          |> Enum.map(&gen_reference/1)
-        {m, references}
+      def references(m) do
+        relations
+        |> Enum.filter(fn {a, to, b} -> b == m end)
+        |> Enum.map(&gen_reference/1)
       end
 
       def gen_reference({a, r, b}) do
@@ -107,24 +102,41 @@ defmodule Relation do
         end
       end
 
-      def ordered do
-        relations
-        |> List.foldl({[], []}, fn({a, _, b}, {as, bs}) ->
-              {[a| as], [b | bs]}
-          end)
-        |> (fn {as, bs} ->
-            (as |> Enum.reverse)
-            ++
-            (bs |> Enum.reverse)
-          end).()
-        |> Enum.reduce([], fn i, acc ->
-            if i in acc do
-              acc
+      def sort_models(models, relations) do
+        ordered =
+          relations
+          |> List.foldl({[], []}, fn({a, _, b}, {as, bs}) ->
+                {[a| as], [b | bs]}
+            end)
+          |> case do
+              {as, bs} ->
+                (as |> Enum.reverse) ++ (bs |> Enum.reverse)
+            end
+          |> Enum.reduce([], fn i, acc ->
+              if i in acc do
+                acc
+              else
+                [i | acc]
+              end
+            end)
+          |> Enum.reverse
+
+        models
+        |> Enum.reduce(ordered, fn {name, _, _}, acc ->
+            unless name in acc do
+              [name | acc]
             else
-              [i | acc]
+              acc
             end
           end)
-        |> Enum.reverse
+        |> Enum.map(fn name ->
+            models
+            |> Enum.filter(fn {n, _, _} -> n == name end)
+            |> case do
+                [m] -> m
+              end
+          end)
+
       end
     end
   end
