@@ -3,8 +3,8 @@ defmodule ConnectQuery do
     for {from, :many_to_many, to} <- Models.relations do
       from_s = Macro.underscore(from)
       to_s = Macro.underscore(to)
-      from = "Elixir.#{from}" |> String.to_atom
-      to = "Elixir.#{to}" |> String.to_atom
+      from_a = "Elixir.#{from}" |> String.to_atom
+      to_a = "Elixir.#{to}" |> String.to_atom
       from_to_to = "Elixir.#{from}To#{to}" |> String.to_atom
       from_to_to_s = "#{from_s}_to_#{to_s}"
 
@@ -42,14 +42,14 @@ defmodule ConnectQuery do
 
         defp get_owner(_changes, owner_id) do
           case Repo.get(Owner, owner_id) do
-            nil -> {:error, "Owner not found"}
+            nil -> {:error, unquote("#{from} not found")}
             owner -> {:ok, owner}
           end
         end
 
         defp get_cat(_changes, cat_id) do
           case Repo.get(Cat, cat_id) do
-            nil -> {:error, "Cat not found"}
+            nil -> {:error, unquote("#{to} not found")}
             cat -> {:ok, cat}
           end
         end
@@ -86,7 +86,7 @@ defmodule ConnectQuery do
               preload: :cats
 
           case Repo.one(query) do
-            nil -> {:error, "Owner not found"}
+            nil -> {:error, unquote("#{from} not found")}
             owner -> {:ok, owner}
           end
         end
