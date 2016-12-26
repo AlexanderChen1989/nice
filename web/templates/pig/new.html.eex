@@ -1,0 +1,6 @@
+<h2>New pig</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: pig_path(@conn, :create) %>
+
+<%= link "Back", to: pig_path(@conn, :index) %>

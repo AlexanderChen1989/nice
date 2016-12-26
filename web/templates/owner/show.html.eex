@@ -1,0 +1,13 @@
+<h2>Show owner</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @owner.name %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: owner_path(@conn, :edit, @owner) %>
+<%= link "Back", to: owner_path(@conn, :index) %>

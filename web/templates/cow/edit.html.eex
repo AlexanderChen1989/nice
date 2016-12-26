@@ -1,0 +1,6 @@
+<h2>Edit cow</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: cow_path(@conn, :update, @cow) %>
+
+<%= link "Back", to: cow_path(@conn, :index) %>
