@@ -103,13 +103,12 @@ end
   end
 
   defp get_from_to_s(relations) do
-    relations =
-      relations
-      |> Enum.filter(fn {_, r, _} -> r == :many_to_many end)
-      |> Enum.map(fn {f, _, t} -> [f, t] end)
-      |> List.flatten
-      |> Enum.uniq
-      |> Enum.map(fn token ->
+    relations
+    |> Enum.filter(fn {_, r, _} -> r == :many_to_many end)
+    |> Enum.map(fn {f, _, t} -> [f, t] end)
+    |> List.flatten
+    |> Enum.uniq
+    |> Enum.map(fn token ->
       token_s = Macro.underscore(token)
       ~s/
   defp get_#{token_s}(_changes, #{token_s}_id) do
