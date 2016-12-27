@@ -29,6 +29,7 @@ defmodule Mix.Tasks.Gen.Tasks.Query do
           acc
           |> put(from)
           |> put(to)
+          |> put("#{from}To#{to}")
 
         _, acc -> acc
       end)
@@ -36,7 +37,7 @@ defmodule Mix.Tasks.Gen.Tasks.Query do
       list ->
          ~s/
 defmodule #{base}.ConnectQuery do
-  alias #{base}.{#{list |> Enum.join(", ") }}
+  alias #{base}.{Repo, #{list |> Enum.join(", ") }}
   alias Ecto.Multi
   import Ecto.Query/
     end
@@ -63,6 +64,66 @@ end
   end
 
   def body(relations) do
+    create_to_s(relations) ++
+    create_from_s_to_to_s(relations) ++
+    get_from_to_s(relations) ++
+    query_funcs(relations)
+  end
+
+  defp create_to_s(relations) do
+    relations =
+      relations
+      |> Enum.uniq_by(fn {from, _, to} -> {from, to} end)
+      |> Enum.sort_by(fn {_, _, to} -> to end)
+
+    for {from, :many_to_many, to} <- relations do
+      from_s = Macro.underscore(from)
+      to_s = Macro.underscore(to)
+      ~s/
+  defp create_#{to_s}(%{#{from_s}: _}, #{to_s}_params) do
+    %#{to}{}
+    |> #{to}.changeset(#{to_s}_params)
+    |> Repo.insert
+  end/
+    end
+  end
+
+  defp create_from_s_to_to_s(relations) do
+    relations = Enum.uniq_by(relations, fn {from, _, to} -> {from, to} end)
+
+    for {from, :many_to_many, to} <- relations do
+      from_s = Macro.underscore(from)
+      to_s = Macro.underscore(to)
+      ~s/
+  defp create_#{from_s}_to_#{to_s}(%{#{to_s}: #{to_s}, #{from_s}: #{from_s}}) do
+    %#{from}To#{to}{#{to_s}: #{to_s}, #{from_s}: #{from_s}}
+    |> Repo.insert
+  end/
+    end
+  end
+
+  defp get_from_to_s(relations) do
+    relations =
+      relations
+      |> Enum.filter(fn {_, r, _} -> r == :many_to_many end)
+      |> Enum.map(fn {f, _, t} -> [f, t] end)
+      |> List.flatten
+      |> Enum.uniq
+      |> Enum.map(fn token ->
+      token_s = Macro.underscore(token)
+      ~s/
+  defp get_#{token_s}(_changes, #{token_s}_id) do
+    case Repo.get(#{token}, #{token_s}_id) do
+      nil -> {:error, "#{token} not found"}
+      #{token_s} -> {:ok, #{token_s}}
+    end
+  end/
+      end)
+  end
+
+  def query_funcs(relations) do
+    relations = Enum.uniq_by(relations, fn {from, _, to} -> {from, to} end)
+
     for {from, :many_to_many, to} <- relations do
       from_s = Macro.underscore(from)
       to_s = Macro.underscore(to)
@@ -81,32 +142,6 @@ end
       {:error, reason} -> {:error, reason}
     end
   end
-
-  defp create_#{to_s}(%{#{from_s}: #{from_s}}, #{to_s}_params) do
-    %#{to}{}
-    |> #{to}.changeset(#{to_s}_params)
-    |> Repo.insert
-  end
-
-  defp create_#{from_s}_to_#{to_s}(%{#{to_s}: #{to_s}, #{from_s}: #{from_s}}) do
-    %#{from}To#{to}{#{to_s}: #{to_s}, #{from_s}: #{from_s}}
-    |> Repo.insert
-  end
-
-  defp get_#{from_s}(_changes, #{from_s}_id) do
-    case Repo.get(#{from}, #{from_s}_id) do
-      nil -> {:error, "#{from} not found"}
-      #{from_s} -> {:ok, #{from_s}}
-    end
-  end
-
-  defp get_#{to_s}(_changes, #{to_s}_id) do
-    case Repo.get(#{to}, #{to_s}_id) do
-      nil -> {:error, "#{to} not found"}
-      #{to_s} -> {:ok, #{to_s}}
-    end
-  end
-
 
   def #{from_s}_connect_#{to_s}(#{from_s}_id, #{to_s}_id) do
     Multi.new
