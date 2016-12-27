@@ -19,6 +19,16 @@ defmodule Nice.ConnectQuery do
     end
   end
 
+  def create_owner(owner_params) do
+    %Owner{}
+    |> Owner.changeset(owner_params)
+    |> Repo.insert
+    |> case do
+      {:ok, owner} -> {:ok, owner}
+      {:error, changeset} -> {:error, changeset.errors}
+    end
+  end
+
   defp create_cat(%{owner: _}, cat_params) do
     %Cat{}
     |> Cat.changeset(cat_params)
@@ -88,6 +98,17 @@ defmodule Nice.OwnerToCatQueryTest do
   use Nice.ModelCase
 
   alias Nice.{Repo, Owner, Cat, OwnerToCat, ConnectQuery}
+
+  test "create a owner" do
+    owner_params = %{name: "Owner"}
+    {:ok, owner} = ConnectQuery.create_owner(owner_params)
+    assert owner.id
+    owner_params = %{name: "Owner", cats: [%{name: "Cat"}]}
+    {:ok, owner} = ConnectQuery.create_owner(owner_params)
+    owner = Repo.preload(owner, :cats)
+    assert owner.id
+    IO.inspect owner.cats
+  end
 
   describe "for a owner" do
     setup [:create_owner, :create_cat, :create_owner_to_cat]

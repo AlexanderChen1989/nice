@@ -15,5 +15,7 @@ defmodule Nice.Owner do
     struct
     |> cast(params, [:name])
     |> validate_required([:name])
+    |> cast_assoc(:cats)
+
   end
 end

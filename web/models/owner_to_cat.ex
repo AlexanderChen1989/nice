@@ -4,8 +4,6 @@ defmodule Nice.OwnerToCat do
   schema "owner_to_cats" do
     belongs_to :owner, Nice.Owner
     belongs_to :cat, Nice.Cat
-
-    timestamps()
   end
 
   @doc """
