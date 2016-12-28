@@ -40,7 +40,7 @@ function connect(id1, id2, color, thickness) {
 </script>
 
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-6">
 
     <h2>Listing  <%= from_plural %></h2>
 
@@ -67,7 +67,7 @@ function connect(id1, id2, color, thickness) {
           </td>
           <td>
             <%= "<%=" %> link ">",
-              to: <%= singular %>_connect_path(@conn, :connect, from: <%= from_singular %>.id),
+              to: <%= singular %>_connect_path(@conn, :connect, from: <%= from_singular %>.id, page_from: @page_from.page_number, page: @page_to.page_number),
               id: "from_#{<%= from_singular %>.id}",
               class: "btn #{if <%= from_singular %>.marked, do: "btn-primary", else: "btn-default"} btn-xs" <%= "%\>" %>
           </td>
@@ -76,11 +76,13 @@ function connect(id1, id2, color, thickness) {
       </tbody>
     </table>
 
+    <%= "<%=" %> pagination_links @page_from, page_to: @page_to.page_number, from: @from <%= "%\>" %>
+
+
     <%= "<%=" %> link "New <%= from_singular %>", to: <%= from_singular %>_path(@conn, :new) <%= "%\>" %>
 
   </div>
-  <div class="col-md-2"></div>
-  <div class="col-md-5">
+  <div class="col-md-6">
 
     <h2>Listing <%= to_plural %></h2>
 
@@ -101,7 +103,7 @@ function connect(id1, id2, color, thickness) {
           <td>
             <%= "<%=" %> link "<",
             id: "to_#{<%= to_singular %>.id}",
-            to: <%= singular %>_connect_path(@conn, :toggle, from: @from, to: <%= to_singular %>.id),
+            to: <%= singular %>_connect_path(@conn, :toggle, from: @from, to: <%= to_singular %>.id, page_from: @page_from.page_number, page: @page_to.page_number),
             class: "btn #{if <%= to_singular %>.marked, do: "btn-primary", else: "btn-default"} btn-xs" <%= "%\>" %>
           </td>
           <td><%= "<%=" %> <%= to_singular %>.id <%= "%\>" %></td>
@@ -116,6 +118,7 @@ function connect(id1, id2, color, thickness) {
     <%= "<%" %> end <%= "%\>" %>
       </tbody>
     </table>
+    <%= "<%=" %> pagination_links @page_to, page_from: @page_from.page_number, from: @from <%= "%\>" %>
 
     <%= "<%=" %> link "New <%= to_singular %>", to: <%= to_singular %>_path(@conn, :new) <%= "%\>" %>
 

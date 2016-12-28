@@ -14,25 +14,50 @@ defmodule <%= module %>ConnectController do
       toggle_connect(from, to)
     end
 
-    redirect conn, to: <%= singular %>_connect_path(conn, :connect, from: from)
+    redirect conn, to: <%= singular %>_connect_path(conn, :connect, params)
   end
 
   def connect(conn, params) do
     {from, _} = Map.get(params, "from", "-1") |> Integer.parse
 
+    {from_params, to_params} =
+      case params do
+        %{"page_from" => from_page, "page" => to_page} ->
+          {%{"page": from_page}, %{"page": to_page}}
+        %{"page_to" => to_page, "page" => from_page} ->
+          {%{"page": from_page}, %{"page": to_page}}
+        _ ->
+          {%{"page": 1}, %{"page": 1}}
+      end
+
+    page_from =
+      Repo.paginate(<%= from %>, from_params)
+
     <%= from_plural %> =
-      Repo.all(<%= from %>)
+      page_from.entries
       |> mark_item(&(&1.id == from))
 
     <%= to_singular %>_ids =
-      Repo.all(<%= module %>)
-      |> Enum.filter_map(& &1.<%= from_singular %>_id == from, & &1.<%= to_singular %>_id)
+      (from ft in <%= module %>,
+        where: ft.<%= from_singular %>_id == ^from,
+        select: ft.<%= to_singular %>_id)
+      |> Repo.all
+
+    page_to =
+      Repo.paginate(<%= to %>, to_params)
 
     <%= to_plural %> =
-      Repo.all(<%= to %>)
+      page_to.entries
       |> mark_item(& &1.id in <%= to_singular %>_ids)
 
-    render conn, "connect.html", <%= from_plural %>: <%= from_plural %>, <%= to_plural %>: <%= to_plural %>, from: from
+    render(
+      conn, "connect.html",
+      page_from: page_from,
+      page_to: page_to,
+      owners: <%= from_plural %>,
+      cats: <%= to_plural %>,
+      from: from
+    )
   end
 
   defp toggle_connect(from, to) do
