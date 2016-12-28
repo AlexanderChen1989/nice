@@ -5,7 +5,7 @@ defmodule <%= module %>Controller do
 
   def index(conn, params) do
     page = Repo.paginate(<%= alias %>, params)
-    render(conn, "index.html", <%= plural %>: page.entries)
+    render(conn, "index.html", page: page, <%= plural %>: page.entries)
   end
 
   def new(conn, _params) do
