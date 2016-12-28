@@ -26,5 +26,6 @@
 <% end %>
   </tbody>
 </table>
+<%= pagination_links @page %>
 
 <%= link "New cat", to: cat_path(@conn, :new) %>

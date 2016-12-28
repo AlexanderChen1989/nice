@@ -41,3 +41,6 @@ config :nice, Nice.Repo,
   database: "nice_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :scrivener_html,
+  routes_helper: Nice.Router.Helpers

@@ -3,9 +3,9 @@ defmodule Nice.CatController do
 
   alias Nice.Cat
 
-  def index(conn, _params) do
-    cats = Repo.all(Cat)
-    render(conn, "index.html", cats: cats)
+  def index(conn, params) do
+    page = Repo.paginate(Cat, params)
+    render(conn, "index.html", page: page, cats: page.entries)
   end
 
   def new(conn, _params) do
