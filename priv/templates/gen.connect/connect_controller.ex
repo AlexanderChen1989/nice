@@ -54,8 +54,8 @@ defmodule <%= module %>ConnectController do
       conn, "connect.html",
       page_from: page_from,
       page_to: page_to,
-      owners: <%= from_plural %>,
-      cats: <%= to_plural %>,
+      <%= from_plural %>: <%= from_plural %>,
+      <%= to_plural %>: <%= to_plural %>,
       from: from
     )
   end
