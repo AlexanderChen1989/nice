@@ -23,7 +23,8 @@ defmodule Nice.Router do
     resources "/cows", CowController
     get "/connect/owner_to_cats", OwnerToCatConnectController, :connect
     get "/connect/owner_to_cats/toggle", OwnerToCatConnectController, :toggle
-
+    get "/connect/pig_to_cows", PigToCowConnectController, :connect
+    get "/connect/pig_to_cows/toggle", PigToCowConnectController, :toggle
     get "/", PageController, :index
   end
 
