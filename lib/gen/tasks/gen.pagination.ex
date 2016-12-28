@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Phoenix.Gen.Html do
+defmodule Mix.Tasks.Gen.Pagination do
   use Mix.Task
 
   @shortdoc "Generates controller, model and views for an HTML based resource"
