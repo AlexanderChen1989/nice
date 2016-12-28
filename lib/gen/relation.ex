@@ -81,7 +81,7 @@ defmodule Relation do
         |> sort_models(relations)
         |> Enum.map(fn {m, t, fs} ->
             rs = references(m, relations)
-            ["mix", "phoenix.gen.html", "#{m}", "#{t}"] ++ fs ++ rs
+            ["mix", "gen.pagination", "#{m}", "#{t}"] ++ fs ++ rs
           end)
       end
 

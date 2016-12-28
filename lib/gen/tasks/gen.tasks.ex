@@ -32,8 +32,8 @@ defmodule Mix.Tasks.Gen.Tasks.Run do
     Models.tasks
     |> Enum.map(&remove_empty/1)
     |> Enum.map(fn [_, task | args] -> {task, args} end)
-    |> Enum.map(&puts_tasks/1)
-    # |> Enum.map(&exec/1)
+    |> Enum.map(&exec/1)
+    # |> Enum.map(&puts_tasks/1)
   end
 
   def puts_tasks({task, args}) do
