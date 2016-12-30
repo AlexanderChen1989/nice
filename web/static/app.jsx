@@ -3,33 +3,23 @@ import ReactDOM from 'react-dom'
 import Relay from 'react-relay'
 
 
-// Welcome to Relay.
-// Allow us to introduce you to the four elements.
-
-/**
- * #1 - Your React components
- * This will look familiar to React developers.
- *
- * To learn more about React, visit:
- *  https://facebook.github.io/react
- */
+// just implement component, dont worry about mode
 class HelloApp extends React.Component {
   render() {
     // Relay will materialize this prop based on the
     // result of the query in the next component.
     const {hello} = this.props.greetings;
-    return <h1>{hello}</h1>;
+    const {name} = this.props.item;
+    return (
+      <div>
+        <h1>{hello}</h1>
+        <h1>{name}</h1>
+      </div>
+    )
   }
 }
 
-/**
- * #2 - Relay containers
- * Compose your React components with a declaration of
- * the GraphQL query fragments that fetch their data.
- *
- * To learn more about Relay containers, visit:
- *   https://facebook.github.io/relay/docs/guides-containers.html
- */
+// Model -> Component props
 HelloApp = Relay.createContainer(HelloApp, {
   fragments: {
     // This GraphQL query executes against
@@ -42,17 +32,15 @@ HelloApp = Relay.createContainer(HelloApp, {
         hello,
       }
     `,
+    item: () => Relay.QL`
+      fragment on Item {
+        name
+      }
+    `
   },
 });
 
-/**
- * #3 - Relay routes
- * Define a root GraphQL query into which your
- * containers' query fragments will be composed.
- *
- * To learn more about Relay routes, visit:
- *   https://facebook.github.io/relay/docs/guides-routes.html
- */
+// compose query
 class HelloRoute extends Relay.Route {
   static routeName = 'Hello';  // A unique name
   static queries = {
@@ -60,12 +48,20 @@ class HelloRoute extends Relay.Route {
     // 'greetings' fragment into the 'greetings'
     // field at the root of the GraphQL schema.
     greetings: (Component) => Relay.QL`
-      query GreetingsQuery {
+      query {
         greetings {
           ${Component.getFragment('greetings')},
-        },
+        }
       }
     `,
+    item: (Component) => Relay.QL`
+      query {
+        item(id: "foo") {
+          ${Component.getFragment('item')},
+        }
+      }
+    `,
+
   };
 }
 

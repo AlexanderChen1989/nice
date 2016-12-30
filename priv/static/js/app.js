@@ -75,16 +75,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// Welcome to Relay.
-	// Allow us to introduce you to the four elements.
-
-	/**
-	 * #1 - Your React components
-	 * This will look familiar to React developers.
-	 *
-	 * To learn more about React, visit:
-	 *  https://facebook.github.io/react
-	 */
+	// just implement component, dont worry about mode
 	var HelloApp = function (_React$Component) {
 	  _inherits(HelloApp, _React$Component);
 
@@ -100,11 +91,21 @@
 	      // Relay will materialize this prop based on the
 	      // result of the query in the next component.
 	      var hello = this.props.greetings.hello;
+	      var name = this.props.item.name;
 
 	      return _react2.default.createElement(
-	        'h1',
+	        'div',
 	        null,
-	        hello
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          hello
+	        ),
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          name
+	        )
 	      );
 	    }
 	  }]);
@@ -112,14 +113,7 @@
 	  return HelloApp;
 	}(_react2.default.Component);
 
-	/**
-	 * #2 - Relay containers
-	 * Compose your React components with a declaration of
-	 * the GraphQL query fragments that fetch their data.
-	 *
-	 * To learn more about Relay containers, visit:
-	 *   https://facebook.github.io/relay/docs/guides-containers.html
-	 */
+	// Model -> Component props
 
 
 	HelloApp = _reactRelay2.default.createContainer(HelloApp, {
@@ -145,18 +139,36 @@
 	          type: 'Greetings'
 	        };
 	      }();
+	    },
+	    item: function item() {
+	      return function () {
+	        return {
+	          children: [{
+	            fieldName: 'name',
+	            kind: 'Field',
+	            metadata: {},
+	            type: 'String'
+	          }, {
+	            fieldName: 'id',
+	            kind: 'Field',
+	            metadata: {
+	              isGenerated: true,
+	              isRequisite: true
+	            },
+	            type: 'ID'
+	          }],
+	          id: _reactRelay2.default.QL.__id(),
+	          kind: 'Fragment',
+	          metadata: {},
+	          name: 'App_ItemRelayQL',
+	          type: 'Item'
+	        };
+	      }();
 	    }
 	  }
 	});
 
-	/**
-	 * #3 - Relay routes
-	 * Define a root GraphQL query into which your
-	 * containers' query fragments will be composed.
-	 *
-	 * To learn more about Relay routes, visit:
-	 *   https://facebook.github.io/relay/docs/guides-routes.html
-	 */
+	// compose query
 
 	var HelloRoute = function (_Relay$Route) {
 	  _inherits(HelloRoute, _Relay$Route);
@@ -193,11 +205,38 @@
 	        fieldName: 'greetings',
 	        kind: 'Query',
 	        metadata: {},
-	        name: 'GreetingsQuery',
+	        name: 'App',
 	        type: 'Greetings'
 	      };
 	    }(Component.getFragment('greetings'));
+	  },
+	  item: function item(Component) {
+	    return function (RQL_0) {
+	      return {
+	        calls: [{
+	          kind: 'Call',
+	          metadata: {
+	            type: 'ID!'
+	          },
+	          name: 'id',
+	          value: {
+	            kind: 'CallValue',
+	            callValue: 'foo'
+	          }
+	        }],
+	        children: [].concat.apply([], [_reactRelay2.default.QL.__frag(RQL_0)]),
+	        fieldName: 'item',
+	        kind: 'Query',
+	        metadata: {
+	          identifyingArgName: 'id',
+	          identifyingArgType: 'ID!'
+	        },
+	        name: 'App',
+	        type: 'Item'
+	      };
+	    }(Component.getFragment('item'));
 	  }
+
 	};
 	_reactDom2.default.render(_react2.default.createElement(_reactRelay2.default.RootContainer, {
 	  Component: HelloApp,
