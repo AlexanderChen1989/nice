@@ -13,6 +13,12 @@ defmodule Nice.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    get "/graphiql", Absinthe.Plug.GraphiQL, schema: Nice.Schema
+    post "/graphiql", Absinthe.Plug.GraphiQL, schema: Nice.Schema
+    forward "/graphql", Absinthe.Plug, schema: Nice.Schema
+  end
+
   scope "/", Nice do
     pipe_through :browser # Use the default browser stack
 

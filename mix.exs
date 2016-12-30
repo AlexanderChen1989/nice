@@ -18,8 +18,15 @@ defmodule Nice.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Nice, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :scrivener_ecto, :scrivener_html, :ex_machina]]
+     applications: applications]
+  end
+
+  def applications do
+    [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
+      :phoenix_ecto, :postgrex, :scrivener_ecto, :scrivener_html, :ex_machina,
+      :absinthe, :absinthe_plug,
+			:timex
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -40,6 +47,9 @@ defmodule Nice.Mixfile do
      {:scrivener_ecto, "~> 1.0"},
      {:scrivener_html, "~> 1.1"},
      {:ex_machina, "~> 1.0", only: [:test, :dev]},
+     {:absinthe, "~> 1.2.0"},
+     {:absinthe_plug, "~> 1.2.0"},
+	   {:timex, "~> 3.0"},
      {:cowboy, "~> 1.0"}]
   end
 
