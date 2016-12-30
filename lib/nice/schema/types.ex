@@ -7,6 +7,11 @@ defmodule Nice.Schema.Types do
     field :name, :string
   end
 
+  @desc "Greetings"
+  object :greetings do
+    field :hello, :string
+  end
+
 	scalar :time, description: "ISOz time" do
     parse &Timex.parse(&1.value, "{ISOz}")
     serialize &Timex.format!(&1, "{ISOz}")

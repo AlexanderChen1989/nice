@@ -17,6 +17,12 @@ defmodule Nice.Schema do
         {:ok, @items[item_id]}
       end
     end
+
+    field :greetings, :greetings do
+      resolve fn _, _ ->
+        {:ok, %{hello: "Alex"}}
+      end
+    end
   end
 
 end
