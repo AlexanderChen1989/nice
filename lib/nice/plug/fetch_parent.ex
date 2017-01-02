@@ -1,6 +1,7 @@
 defmodule Nice.Plug.FetchParent do
   use Plug.Builder
   alias Nice.{Repo, Pig, Cow, PigToCow}
+  import Ecto
   import Ecto.Query
 
   def call(%{params: %{"pig_id" => pig_id, "cow_id" => cow_id} = params} = conn, _) do
@@ -36,6 +37,7 @@ defmodule Nice.Plug.FetchParent do
         conn
         |> assign(:parent_type, "Pig")
         |> assign(:parent, pig)
+        |> assign(:parent_assoc, assoc(pig, :cows))
     end
   end
 

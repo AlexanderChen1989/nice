@@ -4,6 +4,7 @@ defmodule Nice.Pig do
   schema "pigs" do
     field :name, :string
 
+    many_to_many :cows, Nice.Cow, join_through: "pig_to_cows"
     timestamps()
   end
 

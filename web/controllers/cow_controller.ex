@@ -4,7 +4,15 @@ defmodule Nice.CowController do
   alias Nice.Cow
 
   def index(conn, params) do
-    page = Repo.paginate(Cow, params)
+    page =
+      if conn.assigns.parent do
+        IO.inspect conn.assigns.parent
+        conn.assigns.parent_assoc
+        |> Repo.paginate(params)
+      else
+        Repo.paginate(Cow, params)
+      end
+      
     render(conn, "index.html", page: page, cows: page.entries)
   end
 
