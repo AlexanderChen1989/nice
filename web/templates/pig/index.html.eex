@@ -1,0 +1,27 @@
+<h2>Listing pigs</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for pig <- @pigs do %>
+    <tr>
+      <td><%= pig.name %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: pig_path(@conn, :show, pig), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: pig_path(@conn, :edit, pig), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: pig_path(@conn, :delete, pig), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+<%= pagination_links @page %>
+
+<%= link "New pig", to: pig_path(@conn, :new) %>

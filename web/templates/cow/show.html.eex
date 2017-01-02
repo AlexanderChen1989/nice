@@ -1,0 +1,18 @@
+<h2>Show cow</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @cow.name %>
+  </li>
+
+  <li>
+    <strong>Cat:</strong>
+    <%= @cow.cat_id %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: cow_path(@conn, :edit, @cow) %>
+<%= link "Back", to: cow_path(@conn, :index) %>

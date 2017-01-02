@@ -1,0 +1,13 @@
+<h2>Show pig</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @pig.name %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: pig_path(@conn, :edit, @pig) %>
+<%= link "Back", to: pig_path(@conn, :index) %>
