@@ -5,7 +5,16 @@
 <% end %>
 </h2>
 
-<%= render "form.html", changeset: @changeset,
-                        action: cow_path(@conn, :update, @cow) %>
+<%= if @conn.assigns.parent do %>
+  <%= render "form.html", changeset: @changeset,
+                          action: cow_path(@conn, :update, @conn.assigns.parent, @cow, []) %>
 
-<%= link "Back", to: cow_path(@conn, :index) %>
+  <%= link "Back", to: cow_path(@conn, :index, @conn.assigns.parent, []) %>
+
+<% else %>
+  <%= render "form.html", changeset: @changeset,
+                          action: cow_path(@conn, :update, @cow) %>
+
+  <%= link "Back", to: cow_path(@conn, :index) %>
+
+<% end %>

@@ -21,15 +21,27 @@
       <td><%= cow.name %></td>
       <td><%= cow.cat_id %></td>
 
-      <td class="text-right">
-        <%= link "Show", to: cow_path(@conn, :show, cow), class: "btn btn-default btn-xs" %>
-        <%= link "Edit", to: cow_path(@conn, :edit, cow), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: cow_path(@conn, :delete, cow), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
-      </td>
+    <%= if @conn.assigns.parent do %>
+          <td class="text-right">
+            <%= link "Show", to: cow_path(@conn, :show, @conn.assigns.parent, cow, []), class: "btn btn-default btn-xs" %>
+            <%= link "Edit", to: cow_path(@conn, :edit, @conn.assigns.parent, cow, []), class: "btn btn-default btn-xs" %>
+            <%= link "Delete", to: cow_path(@conn, :delete, @conn.assigns.parent, cow, []), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+          </td>
+    <% else %>
+          <td class="text-right">
+            <%= link "Show", to: cow_path(@conn, :show, cow), class: "btn btn-default btn-xs" %>
+            <%= link "Edit", to: cow_path(@conn, :edit, cow), class: "btn btn-default btn-xs" %>
+            <%= link "Delete", to: cow_path(@conn, :delete, cow), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+          </td>
+    <% end %>
     </tr>
 <% end %>
   </tbody>
 </table>
 <%= pagination_links @page %>
 
-<%= link "New cow", to: cow_path(@conn, :new) %>
+<%= if @conn.assigns.parent do %>
+  <%= link "New cow", to: cow_path(@conn, :new, @conn.assigns.parent, []) %>
+<% else %>
+  <%= link "New cow", to: cow_path(@conn, :new) %>
+<% end %>

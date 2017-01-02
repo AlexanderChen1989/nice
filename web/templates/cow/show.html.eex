@@ -19,5 +19,10 @@
 
 </ul>
 
-<%= link "Edit", to: cow_path(@conn, :edit, @cow) %>
-<%= link "Back", to: cow_path(@conn, :index) %>
+<%= if @conn.assigns.parent do %>
+  <%= link "Edit", to: cow_path(@conn, :edit, @conn.assigns.parent, @cow, []) %>
+  <%= link "Back", to: cow_path(@conn, :index, @conn.assigns.parent, []) %>
+<% else %>
+  <%= link "Edit", to: cow_path(@conn, :edit, @cow) %>
+  <%= link "Back", to: cow_path(@conn, :index) %>
+<% end %>
