@@ -22,10 +22,21 @@ defmodule Nice.Mixfile do
   end
 
   def applications do
-    [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-      :phoenix_ecto, :postgrex, :scrivener_ecto, :scrivener_html, :ex_machina,
-      :absinthe, :absinthe_plug,
-			:timex
+    [
+      :phoenix,
+      :phoenix_pubsub,
+      :phoenix_html,
+      :cowboy,
+      :logger,
+      :gettext,
+      :phoenix_ecto,
+      :postgrex,
+      :scrivener_ecto,
+      :scrivener_html,
+      :ex_machina,
+      :absinthe,
+      :absinthe_plug,
+      :timex
     ]
   end
 
