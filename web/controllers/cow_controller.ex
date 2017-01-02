@@ -12,7 +12,7 @@ defmodule Nice.CowController do
       else
         Repo.paginate(Cow, params)
       end
-      
+
     render(conn, "index.html", page: page, cows: page.entries)
   end
 
@@ -26,9 +26,14 @@ defmodule Nice.CowController do
 
     case Repo.insert(changeset) do
       {:ok, _cow} ->
+        path =
+          if conn.assigns.parent,
+            do: cow_path(conn, :index, conn.assigns.parent, []),
+          else: cow_path(conn, :index)
+
         conn
         |> put_flash(:info, "Cow created successfully.")
-        |> redirect(to: cow_path(conn, :index))
+        |> redirect(to: path)
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -51,9 +56,14 @@ defmodule Nice.CowController do
 
     case Repo.update(changeset) do
       {:ok, cow} ->
+        path =
+          if conn.assigns.parent,
+            do: cow_path(conn, :show, conn.assigns.parent, cow, []),
+          else: cow_path(conn, :show, cow)
+
         conn
         |> put_flash(:info, "Cow updated successfully.")
-        |> redirect(to: cow_path(conn, :show, cow))
+        |> redirect(to: path)
       {:error, changeset} ->
         render(conn, "edit.html", cow: cow, changeset: changeset)
     end
@@ -66,8 +76,13 @@ defmodule Nice.CowController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(cow)
 
+    path =
+      if conn.assigns.parent,
+        do: cow_path(conn, :index, conn.assigns.parent, []),
+      else: cow_path(conn, :index)
+
     conn
     |> put_flash(:info, "Cow deleted successfully.")
-    |> redirect(to: cow_path(conn, :index))
+    |> redirect(to: path)
   end
 end
