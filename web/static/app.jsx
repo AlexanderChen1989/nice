@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Relay from 'react-relay'
 
-
 // just implement component, dont worry about mode
 class HelloApp extends React.Component {
   render() {
