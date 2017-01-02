@@ -1,4 +1,4 @@
-defmodule Nice.Plug.Parent do
+defmodule Nice.Plug.FetchParent do
   use Plug.Builder
   alias Nice.{Repo, Pig, Cow, PigToCow}
   import Ecto.Query

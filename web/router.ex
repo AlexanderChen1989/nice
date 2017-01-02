@@ -7,6 +7,11 @@ defmodule Nice.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Nice.Plug.AssignNilParent
+  end
+
+  pipeline :fetch_parent do
+    plug Nice.Plug.FetchParent
   end
 
   pipeline :api do
@@ -19,6 +24,7 @@ defmodule Nice.Router do
     forward "/graphql", Absinthe.Plug, schema: Nice.Schema
   end
 
+
   scope "/", Nice do
     pipe_through :browser # Use the default browser stack
 
@@ -27,13 +33,18 @@ defmodule Nice.Router do
     resources "/owners", OwnerController
     resources "/cats", CatController
     resources "/cows", CowController
-    resources "/pigs/:pig_id/cows", CowController, param: "cow_id"
     get "/connect/owner_to_cats", OwnerToCatConnectController, :connect
     get "/connect/owner_to_cats/toggle", OwnerToCatConnectController, :toggle
     get "/connect/pig_to_cows", PigToCowConnectController, :connect
     get "/connect/pig_to_cows/toggle", PigToCowConnectController, :toggle
     get "/", PageController, :index
   end
+
+  scope "/", Nice do
+    pipe_through [:browser, :fetch_parent]
+    resources "/pigs/:pig_id/cows", CowController, param: "cow_id"
+  end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", Nice do

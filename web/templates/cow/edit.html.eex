@@ -1,6 +1,6 @@
 <h2>
   Edit cow
-<%= if get(@conn.assigns, [:parent]) do %>
+<%= if @conn.assigns.parent do %>
   For <%= @conn.assigns.parent_type %>  <%= @conn.assigns.parent.name %>
 <% end %>
 </h2>

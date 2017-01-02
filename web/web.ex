@@ -29,7 +29,6 @@ defmodule Nice.Web do
   def controller do
     quote do
       use Phoenix.Controller
-      plug Nice.Plug.Parent, ["pig_id", "cow_id"]
 
       alias Nice.Repo
       import Ecto
@@ -53,7 +52,6 @@ defmodule Nice.Web do
       import Nice.Router.Helpers
       import Nice.ErrorHelpers
       import Nice.Gettext
-      import Nice.Helpers
     end
   end
 
