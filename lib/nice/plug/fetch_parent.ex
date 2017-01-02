@@ -25,7 +25,7 @@ defmodule Nice.Plug.FetchParent do
     end
   end
 
-  def call(%{params: %{"pig_id" => pig_id}} = conn, _) do
+  def call(%{params: %{"pig_id" => pig_id} = params} = conn, _) do
     case Repo.get(Pig, pig_id) do
       nil ->
         conn
