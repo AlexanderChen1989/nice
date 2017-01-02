@@ -1,4 +1,10 @@
-<h2>Listing cows</h2>
+<h2>
+  Listing cows
+<%= if get(@conn.assigns, [:parent]) do %>
+    For <%= @conn.assigns.parent_type %>  <%= @conn.assigns.parent.name %>
+<% end %>
+</h2>
+
 
 <table class="table">
   <thead>

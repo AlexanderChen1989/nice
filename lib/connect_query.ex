@@ -1,4 +1,3 @@
-Compiling 1 file (.ex)
 
 defmodule Nice.ConnectQuery do
   alias Nice.{Repo, PigToCow, Cow, Pig, OwnerToCat, Cat, Owner}

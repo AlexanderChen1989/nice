@@ -27,6 +27,7 @@ defmodule Nice.Router do
     resources "/owners", OwnerController
     resources "/cats", CatController
     resources "/cows", CowController
+    resources "/pigs/:pig_id/cows", CowController, param: "cow_id"
     get "/connect/owner_to_cats", OwnerToCatConnectController, :connect
     get "/connect/owner_to_cats/toggle", OwnerToCatConnectController, :toggle
     get "/connect/pig_to_cows", PigToCowConnectController, :connect
