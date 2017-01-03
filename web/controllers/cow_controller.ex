@@ -2,17 +2,25 @@ defmodule Nice.CowController do
   use Nice.Web, :controller
 
   alias Nice.Cow
+  alias Ecto.Multi
+
+  def redirect_to(conn, method, cow \\ nil) do
+    case {conn, method} do
+      {%{assigns: %{parent: parent}}, :index} -> cow_path(conn, :index, parent, [])
+      {conn, :index} -> cow_path(conn, :index)
+      {%{assigns: %{parent: parent}}, :show} -> cow_path(conn, :show, parent, cow, [])
+      {conn, :show} -> cow_path(conn, :show, cow)
+    end
+    |> (& redirect(conn, to: &1)).()
+  end
+
+  def index(%{assigns: %{parent_assoc: assoc}} = conn, params) do
+    page = Repo.paginate(assoc, params)
+    render(conn, "index.html", page: page, cows: page.entries)
+  end
 
   def index(conn, params) do
-    page =
-      if conn.assigns.parent do
-        IO.inspect conn.assigns.parent
-        conn.assigns.parent_assoc
-        |> Repo.paginate(params)
-      else
-        Repo.paginate(Cow, params)
-      end
-
+    page = Repo.paginate(Cow, params)
     render(conn, "index.html", page: page, cows: page.entries)
   end
 
@@ -21,19 +29,37 @@ defmodule Nice.CowController do
     render(conn, "new.html", changeset: changeset)
   end
 
+  def create(%{assigns: %{parent_relation: relation}} = conn, %{"cow" => cow_params}) do
+    changeset = Cow.changeset(%Cow{}, cow_params)
+
+    Multi.new
+    |> Multi.insert(:cow, changeset)
+    |> Multi.run(:relation, fn %{cow: cow} ->
+        Repo.insert(%{relation | cow: cow})
+      end)
+    |> Repo.transaction
+    |> case do
+      {:ok, _} ->
+        conn
+        |> put_flash(:info, "Cow created successfully.")
+        |> redirect_to(:index)
+      {:error, :cow, changeset, _} ->
+        render(conn, "new.html", changeset: changeset)
+      _ ->
+        conn
+        |> put_flash(:error, "Cow creation failed.")
+        |> render("new.html", changeset: changeset)
+    end
+  end
+
   def create(conn, %{"cow" => cow_params}) do
     changeset = Cow.changeset(%Cow{}, cow_params)
 
     case Repo.insert(changeset) do
       {:ok, _cow} ->
-        path =
-          if conn.assigns.parent,
-            do: cow_path(conn, :index, conn.assigns.parent, []),
-          else: cow_path(conn, :index)
-
         conn
         |> put_flash(:info, "Cow created successfully.")
-        |> redirect(to: path)
+        |> redirect_to(:index)
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -56,14 +82,9 @@ defmodule Nice.CowController do
 
     case Repo.update(changeset) do
       {:ok, cow} ->
-        path =
-          if conn.assigns.parent,
-            do: cow_path(conn, :show, conn.assigns.parent, cow, []),
-          else: cow_path(conn, :show, cow)
-
         conn
         |> put_flash(:info, "Cow updated successfully.")
-        |> redirect(to: path)
+        |> redirect_to(:show, cow)
       {:error, changeset} ->
         render(conn, "edit.html", cow: cow, changeset: changeset)
     end
@@ -76,13 +97,8 @@ defmodule Nice.CowController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(cow)
 
-    path =
-      if conn.assigns.parent,
-        do: cow_path(conn, :index, conn.assigns.parent, []),
-      else: cow_path(conn, :index)
-
     conn
     |> put_flash(:info, "Cow deleted successfully.")
-    |> redirect(to: path)
+    |> redirect_to(:index)
   end
 end
