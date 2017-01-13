@@ -12,11 +12,8 @@ class Posts extends React.Component {
   }
 
   renderRow(key, index) {
-    var posts = this.props.posts.edges;
+    var posts = this.props.posts.allPosts.edges;
 
-    // End of the list reached. Increase page size. Relay
-    // will fetch only the required data to fill the new
-    // page size.
     if (index === posts.length - 1) {
       this.props.relay.setVariables({
         pageSize: posts.length + pageSize
@@ -25,14 +22,14 @@ class Posts extends React.Component {
 
     var post = posts[index].node;
     return (
-      <li key={ key }> Id: { post.id }, Headline: { post.headline }</li>
+      <li key={ key }>Headline: { post.headline }</li>
     );
   }
 
   render() {
-    var posts = this.props.posts;
+    var posts = this.props.posts.allPosts;
     return (
-      <ul style={{ height: 200, overflowY: "scroll"}}>
+      <ul>
         <ReactList itemRenderer={ this.renderRow} length={ posts.edges.length }/>
       </ul>
     );
@@ -43,18 +40,19 @@ export default Relay.createContainer(Posts, {
   initialVariables: {
     pageSize: pageSize
   },
+
   fragments: {
+
     posts: () => Relay.QL`
       fragment on Query {
-        allPosts {
-            edges {
-              node {
-                id,
-                headline
-              }
+        allPosts(first: $pageSize) {
+          edges {
+            node {
+              id,
+              headline
             }
+          }
         }
-
       }
     `
   }

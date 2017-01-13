@@ -6,13 +6,11 @@ export default class PostsRoute extends Relay.Route {
   static queries = {
     posts: (Component, vars) => {
       return Relay.QL`
-          {
-            query  {
+          query {
+            query {
               ${Component.getFragment('posts')}
             }
           }
-
-
         `
     }
   }

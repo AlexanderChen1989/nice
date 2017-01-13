@@ -8,8 +8,6 @@ Relay.injectNetworkLayer(
   new Relay.DefaultNetworkLayer('http://localhost:5000/graphql')
 );
 
-// import './hello'
-
 ReactDOM.render(
   <Relay.RootContainer
     Component={Posts}
