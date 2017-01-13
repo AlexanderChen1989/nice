@@ -2884,6 +2884,10 @@ react-lazy-load@^3.0.10:
     lodash.debounce "^4.0.0"
     lodash.throttle "^4.0.0"
 
+react-list@^0.8.1:
+  version "0.8.1"
+  resolved "http://registry.npm.taobao.org/react-list/download/react-list-0.8.1.tgz#81af1c52a2b9a4a3bb039dbfa2135499b42545f0"
+
 react-relay@^0.10.0:
   version "0.10.0"
   resolved "http://registry.npm.taobao.org/react-relay/download/react-relay-0.10.0.tgz#4b19c4450e0140b9f04fd6fe96d8f451f0804078"
