@@ -22,7 +22,7 @@ class Posts extends React.Component {
 
     var post = posts[index].node;
     return (
-      <li key={ key }>Headline: { post.headline }</li>
+      <li style={{height: 100}} key={ key }>Headline: { post.headline }</li>
     );
   }
 

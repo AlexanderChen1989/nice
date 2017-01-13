@@ -46161,7 +46161,7 @@
 	      var post = posts[index].node;
 	      return _react2.default.createElement(
 	        "li",
-	        { key: key },
+	        { style: { height: 100 }, key: key },
 	        "Headline: ",
 	        post.headline
 	      );
